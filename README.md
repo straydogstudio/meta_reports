@@ -1,4 +1,4 @@
-Meta Reports &mdash; A meta data rails engine for creating reports that can export to multiple formats.
+Meta Reports &mdash; A rails report engine
 ===================================================
 
 This project rocks and uses MIT-LICENSE. Fu.
