@@ -1,0 +1,22 @@
+<%
+row_classes = {} if !defined?(row_classes) || row_classes.nil?
+table_class = '' if !defined?(table_class) || table_class.nil?
+%>
+<%= content_tag(:h4, group) %>
+<div class='list_container'>
+<%= content_tag(:table, :class => "table #{table_class}") do %>
+  <%= content_tag(:thead, content_tag(:tr, table.shift.map { |h| html_cell(h, :th)}.join.html_safe ) ) %>
+  <tbody>
+    <% table.each_with_index do |row, i| %>
+      <%
+      row_class = "#{cycle('odd','even')} #{row_classes[i]}".strip
+      %>
+      <%= content_tag(:tr, :class => row_class) do
+        row.each do |cell|
+          %><%= html_cell(cell) %><%
+        end
+      end %>
+    <% end %>
+  </tbody>
+<% end %>
+</div>

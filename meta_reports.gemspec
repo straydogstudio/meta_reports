@@ -14,12 +14,12 @@ Gem::Specification.new do |s|
   s.homepage      = "http://github.com/straydogstudio/meta_reports"
   s.license       = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
   s.test_files    = Dir["spec/**/*"] + ['Guardfile']
 
   s.add_dependency "rails", "~> 3.2.14"
-  s.add_dependency "acts_as_xlsx"
-  s.add_dependency "prawn"
+  s.add_dependency "axlsx_rails"
+  s.add_dependency "prawn_rails"
 
   s.add_development_dependency "bundler", "~> 1.3"
   s.add_development_dependency "rake"
@@ -30,4 +30,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "growl"
   s.add_development_dependency "rb-fsevent"
+  s.add_development_dependency "pry-rails"
+  s.add_development_dependency "pry-debugger"
 end
