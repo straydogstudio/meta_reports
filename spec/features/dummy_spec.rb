@@ -19,7 +19,6 @@ describe 'MetaReports dummy app' do
 
   it "shows report using html" do
     visit "/meta_reports/#{@report_moo.id}"
-    binding.pry
-    page.should have_content "Le Moo"
+    page.should have_content "Ode to Moo"
   end
 end
