@@ -10,9 +10,9 @@ styles[:subtitle] = wb.styles.add_style :sz => 12, :alignment => { :horizontal =
 wb.add_worksheet(name: @report[:title][0,31].gsub(/[:\/]/,'-'), page_margins: @report[:page_margins]) do |sheet|
 	first_table = @report[:tables].values.first
 	columns = first_table.blank? ? 12 : first_table.first.length
-	last_column = columns.to_xls_col
+	last_column = to_xls_col(columns)
 
-	render :partial => "meta_reports/reports/templates/#{subdomain}_header", :locals => { :sheet => sheet, :title => @report[:title], :subtitle => @report[:subtitle], :columns => columns, :styles => styles }
+	render :partial => "meta_reports/reports/templates/default_header", :locals => { :sheet => sheet, :title => @report[:title], :subtitle => @report[:subtitle], :columns => columns, :styles => styles }
   if @report[:description]
     sheet.add_row [@report[:description]]
     this_rows = sheet.rows.length

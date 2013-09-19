@@ -1,6 +1,6 @@
 prawn_document(page_layout: @report[:page_layout] || :portrait, page_size: @report[:page_size] || 'LETTER') do |pdf|
 
-render :partial => "meta_reports/reports/templates/#{subdomain}_header", :locals => { :pdf => pdf, :title => @report[:title], :subtitle => @report[:subtitle] }
+render :partial => "meta_reports/reports/templates/default_header", :locals => { :pdf => pdf, :title => @report[:title], :subtitle => @report[:subtitle] }
 pdf.font_size = @report[:font_size] || 8
 if @report[:description]
   pdf.move_up 5
