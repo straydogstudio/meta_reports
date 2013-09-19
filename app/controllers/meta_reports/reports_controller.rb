@@ -8,7 +8,6 @@ module MetaReports
     end
 
     def show
-      logger.info "reports#show"
       if params[:id].to_s =~ /^\d+$/
         _report = Report.find(params[:id])
       elsif Report.respond_to?(params[:id])
