@@ -1,13 +1,32 @@
 require 'spec_helper'
+require 'fileutils'
 
 describe 'meta_reports:install' do
+  before :all do
+    Dir.chdir(Rails.root) do
+      FileUtils.cp "config/routes_empty.rb", "config/routes.rb"
+      Dir.glob("db/migrate/*create_meta_reports_reports.meta_reports.rb").each do |migration|
+        File.unlink(migration)
+      end
+    end
+  end
+
+  after :all do
+    Dir.chdir(Rails.root) do
+      FileUtils.cp "config/routes_original.rb", "config/routes.rb"
+      migrations = Dir.glob("db/migrate/*create_meta_reports_reports.meta_reports.rb")
+      migrations.length.should == 1
+      migrations.each {|m| File.unlink(m) }
+    end
+  end
+
   it "should generate model" do
     subject.should generate("app/models/meta_reports/report.rb")
   end
 
-  it "should copy migration" do
+  it "should modify the routes file" do
     Dir.chdir(Rails.root) do
-      Dir.glob("db/migrate/*create_meta_reports_reports.meta_reports.rb").length.should == 1
+      open("config/routes.rb").grep(/MetaReports::Engine/).should be
     end
   end
 
