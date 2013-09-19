@@ -22,14 +22,17 @@ module MetaReports
       end
 
       def mount_engine
-        insert_into_file("#{Rails.root}/config/routes.rb", :after => /routes.draw.do\n/) do
-          %Q{
+        routes_file = "#{Rails.root}/config/routes.rb"
+        unless open(routes_file).grep(/MetaReports::Engine/)
+          insert_into_file(routes_file, :after => /routes.draw.do\n/) do
+            %Q{
   # This line mounts MetaReports's routes at /reports by default.
   # This means, any requests to the /reports URL of your application will go to MetaReports::ReportsController#index.
   # If you would like to change where this extension is mounted, simply change '/reports' to something different.
   mount MetaReports::Engine => '/reports'
 
-          }
+}
+          end
         end
       end
     end
