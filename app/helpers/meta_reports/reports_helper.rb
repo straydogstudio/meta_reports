@@ -104,5 +104,16 @@ module MetaReports
       styling[style] << [row,col]
     end
 
+    def to_xls_col(column)
+      index = column.to_i.abs
+      chars = []
+      while index >= 26 do
+        chars << ((index % 26) + 65).chr
+        index = (index / 26).to_i - 1
+      end
+      chars << (index + 65).chr
+      chars.reverse.join
+    end
+
   end
 end
