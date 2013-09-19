@@ -1,0 +1,30 @@
+<%
+report = @report if defined?(report).nil?
+%>
+<%= content_tag(:div, :id => report[:id]) do %>
+	<%
+	title = report[:title]
+	title += '<br>'+content_tag(:span, report[:subtitle], :class => 'small') if report[:subtitle]
+	%>
+	<%= content_tag(:h3, title.html_safe) if title %>
+	<div>
+    <%= report_alt_links(report[:report], params) %>
+    <% if report[:description] %><br><p class='description'><%= report[:description] %></p><% end %>
+  </div>
+
+	<%= content_tag(:div, "No data found", :class => 'textcenter') if report[:tables].blank? %>
+
+	<%
+	groups = report[:group_order] || report[:tables].keys.sort_by {|k| k.to_s}
+	groups.each do |group|
+		table = report[:tables][group]
+		opts = table.last.is_a?(Hash) ? table.pop : {}
+		row_classes = opts[:row_classes] || {}
+		%>
+		<%= render partial: 'meta_reports/reports/templates/default_table', locals: {group: group, table: table, row_classes: row_classes, table_class: opts[:table_class]} %>
+	<% end %>
+<% end %>
+
+<% unless request.xhr? %>
+	<%= link_to 'Reports', '/meta_reports' %>
+<% end -%>

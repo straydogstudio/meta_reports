@@ -1,0 +1,43 @@
+wb = xlsx_package.workbook
+
+#styles
+styles = {}
+styles[:table_header] = wb.styles.add_style :style => :thick, :bg_color => "EEEEEE"
+styles[:bold] = wb.styles.add_style :style => :thick
+styles[:title] = wb.styles.add_style :sz => 14, :alignment => { :horizontal => :center}, :style => :thick
+styles[:subtitle] = wb.styles.add_style :sz => 12, :alignment => { :horizontal => :center}, :style => :thick
+
+wb.add_worksheet(name: @report[:title][0,31].gsub(/[:\/]/,'-'), page_margins: @report[:page_margins]) do |sheet|
+	first_table = @report[:tables].values.first
+	columns = first_table.blank? ? 12 : first_table.first.length
+	last_column = columns.to_xls_col
+
+	render :partial => "meta_reports/reports/templates/#{subdomain}_header", :locals => { :sheet => sheet, :title => @report[:title], :subtitle => @report[:subtitle], :columns => columns, :styles => styles }
+  if @report[:description]
+    sheet.add_row [@report[:description]]
+    this_rows = sheet.rows.length
+    sheet.merge_cells("A#{this_rows}:#{last_column}#{this_rows}")
+  end
+
+	groups = @report[:group_order] || @report[:tables].keys.sort_by {|k| k.to_s}
+	groups.each do |group|
+		table = @report[:tables][group]
+		opts = table.last.is_a?(Hash) ? table.pop : {}
+		row_classes = opts[:row_classes] || {}
+	  sheet.add_row [' '] * columns
+	  this_rows = sheet.rows.length
+	  sheet.add_row [group] + [' ']*(columns-1)
+	  sheet.merge_cells("A#{this_rows}:#{last_column}#{this_rows}")
+		styling = {}
+		unless @report[:has_no_table_header]
+			prep_xlsx_table([table.shift], styling).each do |row|
+				sheet.add_row row, :style => styles[:table_header]
+			end
+		end
+	  prep_xlsx_table(table, styling).each do |row|
+	  	sheet.add_row row
+	  	#TODO: handle styling
+	  end
+	end
+
+end
