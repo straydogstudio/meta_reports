@@ -2,9 +2,9 @@ module MetaReports
   module ReportsHelper
     def html_cell(cell, tag = :td)
       if cell.is_a? Hash
-        tags = cell.reject {|k,v| k == :content || k == :link}
+        tags = cell.reject {|k,v| k == :content || k == :html}
         tags[:class] ||= 'textcenter'
-        content_tag tag, (cell[:link] || cell[:content]).to_s.html_safe, tags
+        content_tag tag, (cell[:html] || cell[:content]).to_s.html_safe, tags
       elsif cell.is_a? Array
       else
         content_tag tag, cell, :class => 'textcenter'
@@ -25,10 +25,10 @@ module MetaReports
       table.each_index do |i|
         table[i].each_index do |j|
           if table[i][j].is_a? Hash
-            [:link, :title, :id].each {|sym| table[i][j].delete(sym)}
+            [:html, :title, :id].each {|sym| table[i][j].delete(sym)}
             _class = table[i][j].delete(:class)
-            if _class =~ /\btext(\w+)\b/
-              set_style(styling, $1.to_sym, i, j)
+            [:right, :left, :center].each do |sym|
+              set_style(styling, sym, i, j) if _class =~ /\b#{sym}\b|[^a-z]#{sym}/i
             end
             if _class =~ /\bbold\b|\bstrong\b/
               set_style(styling, :bold, i, j)
@@ -49,8 +49,8 @@ module MetaReports
             table[i][j] = ''
           elsif table[i][j].is_a? Hash
             _class = table[i][j][:class]
-            {:right => /\bright\b/, :left => /\bleft\b/, :center => /\bcenter\b/}.each do |sym, pattern|
-              set_style(styling, sym, i, j) if _class =~ pattern
+            [:right, :left, :center].each do |sym|
+              set_style(styling, sym, i, j) if _class =~ /\b#{sym}\b|[^a-z]#{sym}/i
             end
             if _class =~ /\bbold\b|\bstrong\b/
               set_style(styling, :bold, i, j)
@@ -62,28 +62,28 @@ module MetaReports
       table
     end
 
-    def report_link(report)
+    def report_link(report, title = report.title)
       if report.direct
         content_tag :span do
           links = []
           if report.format? :html
-            links << link_to(report.title, "/reports/#{report.name}", target: '_blank')
+            links << link_to(title, meta_reports.short_show_path(report), target: '_blank')
           elsif report.format? :pdf
-            links << link_to(report.title, "/reports/#{report.name}.pdf", target: '_blank')
+            links << link_to(title, meta_reports.short_show_path(report, format: :pdf), target: '_blank')
           elsif report.format? :xlsx
-            links << link_to(report.title, "/reports/#{report.name}.xlsx", target: '_blank')
+            links << link_to(title, meta_reports.short_show_path(report, format: :xlsx), target: '_blank')
           end
           if report.format? :pdf
-            links << link_to('PDF', "/reports/#{report.name}.pdf", target: '_blank')
+            links << link_to(image_tag('meta_reports/print.png'), meta_reports.short_show_path(report, format: :pdf), target: '_blank')
           end
           if report.format? :xlsx
-            links << link_to('XLSX', "/reports/#{report.name}.xlsx", target: '_blank')
+            links << link_to(image_tag('meta_reports/spreadsheet.png'), meta_reports.short_show_path(report, format: :xlsx), target: '_blank')
           end
           links.join(' ').html_safe
         end
       else
         content_tag :span do
-         link_to report.title, "/reports/form/#{report.id}?modal=true", :remote => true
+         link_to report.title, meta_reports.short_form_path(report)
         end
       end
     end
@@ -91,10 +91,10 @@ module MetaReports
     def report_alt_links(report, params)
       links = []
       if report.format? :pdf
-        links << link_to('PDF', params.merge({:format => :pdf}), :target => '_blank')
+        links << link_to(image_tag('meta_reports/print.png'), params.merge({:format => :pdf}), :target => '_blank')
       end
       if report.format? :xlsx
-        links << link_to('XLSX', params.merge({:format => :xlsx}), :target => '_blank')
+        links << link_to(image_tag('meta_reports/spreadsheet.png'), params.merge({:format => :xlsx}), :target => '_blank')
       end
       links.join(' ').html_safe
     end
