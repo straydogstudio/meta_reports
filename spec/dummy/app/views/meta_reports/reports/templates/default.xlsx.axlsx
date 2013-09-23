@@ -19,17 +19,17 @@ wb.add_worksheet(name: @report[:title][0,31].gsub(/[:\/]/,'-'), page_margins: @r
     sheet.merge_cells("A#{this_rows}:#{last_column}#{this_rows}")
   end
 
-	groups = @report[:group_order] || @report[:tables].keys.sort_by {|k| k.to_s}
-	groups.each do |group|
-		table = @report[:tables][group]
+	table_names = @report[:table_order] || @report[:tables].keys.sort_by {|k| k.to_s}
+	table_names.each do |table_name|
+		table = @report[:tables][table_name]
 		opts = table.last.is_a?(Hash) ? table.pop : {}
 		row_classes = opts[:row_classes] || {}
 	  sheet.add_row [' '] * columns
 	  this_rows = sheet.rows.length
-	  sheet.add_row [group] + [' ']*(columns-1)
+	  sheet.add_row [table_name] + [' ']*(columns-1)
 	  sheet.merge_cells("A#{this_rows}:#{last_column}#{this_rows}")
 		styling = {}
-		unless @report[:has_no_table_header]
+		unless @report[:table_header] == false
 			prep_xlsx_table([table.shift], styling).each do |row|
 				sheet.add_row row, :style => styles[:table_header]
 			end
