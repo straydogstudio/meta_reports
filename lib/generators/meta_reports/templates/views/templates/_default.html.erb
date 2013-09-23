@@ -15,13 +15,13 @@ report = @report if defined?(report).nil?
 	<%= content_tag(:div, "No data found", :class => 'textcenter') if report[:tables].blank? %>
 
 	<%
-	groups = report[:group_order] || report[:tables].keys.sort_by {|k| k.to_s}
-	groups.each do |group|
-		table = report[:tables][group]
+	table_names = report[:table_order] || report[:tables].keys.sort_by {|k| k.to_s}
+	table_names.each do |table_name|
+		table = report[:tables][table_name]
 		opts = table.last.is_a?(Hash) ? table.pop : {}
 		row_classes = opts[:row_classes] || {}
 		%>
-		<%= render partial: 'meta_reports/reports/templates/default_table', locals: {group: group, table: table, row_classes: row_classes, table_class: opts[:table_class]} %>
+		<%= render partial: 'meta_reports/reports/templates/default_table', locals: {table_name: table_name, table: table, row_classes: row_classes, table_class: opts[:table_class]} %>
 	<% end %>
 <% end %>
 

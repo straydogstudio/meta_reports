@@ -8,12 +8,12 @@ if @report[:description]
   pdf.move_down 15
 end
 
-groups = @report[:group_order] || @report[:tables].keys.sort_by {|k| k.to_s}
-groups.each do |group|
-  table = @report[:tables][group]
+table_names = @report[:table_order] || @report[:tables].keys.sort_by {|k| k.to_s}
+table_names.each do |table_name|
+  table = @report[:tables][table_name]
   pdf.pad_bottom(25) do
-  	# pdf.group do
-  		render :partial => 'meta_reports/reports/templates/default_table', :locals => {:pdf => pdf, :title => group, :table => table}
+  	# pdf.table_name do
+  		render :partial => 'meta_reports/reports/templates/default_table', :locals => {:pdf => pdf, :title => table_name, :table => table}
     # end
   end
 end

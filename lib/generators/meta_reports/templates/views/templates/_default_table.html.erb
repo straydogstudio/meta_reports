@@ -2,10 +2,12 @@
 row_classes = {} if !defined?(row_classes) || row_classes.nil?
 table_class = '' if !defined?(table_class) || table_class.nil?
 %>
-<%= content_tag(:h4, group) %>
+<%= content_tag(:h4, table_name) %>
 <div class='list_container'>
 <%= content_tag(:table, :class => "table #{table_class}") do %>
-  <%= content_tag(:thead, content_tag(:tr, table.shift.map { |h| html_cell(h, :th)}.join.html_safe ) ) %>
+  <% unless @report[:table_header] == false %>
+    <%= content_tag(:thead, content_tag(:tr, table.shift.map { |h| html_cell(h, :th)}.join.html_safe ) ) %>
+  <% end %>
   <tbody>
     <% table.each_with_index do |row, i| %>
       <%
