@@ -83,7 +83,7 @@ module MetaReports
         end
       else
         content_tag :span do
-         link_to report.title, meta_reports.short_form_path(report)
+         link_to title, meta_reports.short_form_path(report)
         end
       end
     end
