@@ -12,6 +12,7 @@ class MetaReports::Report < MetaReports::Base
           ['Number', 'Title', 'Hey'],
           [1, 'Ode to Moo', 'Ow'],
           [2, 'Odious Moo', 'Eww'],
+          [3, "#{params[:moo_type]} Moo", 'No Way!'],
         ]
       }
     }
