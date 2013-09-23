@@ -33,6 +33,7 @@ describe 'meta_reports:install' do
   it "should generate views" do
     subject.should generate("app/views/meta_reports/reports")
     subject.should generate("app/views/meta_reports/reports/forms")
+    subject.should generate("app/views/meta_reports/reports/forms/_form.html.erb")
     subject.should generate("app/views/meta_reports/reports/forms/_form_example.html.erb")
     subject.should generate("app/views/meta_reports/reports/templates")
     subject.should generate("app/views/meta_reports/reports/templates/_default.html.erb")
