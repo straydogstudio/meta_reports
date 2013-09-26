@@ -5,8 +5,11 @@ class MetaReports::Data
   end
 
   def method_missing(method, *args, &block)
-    if method.to_s =~ /^(.+)=$/
+    method_string = method.to_s
+    if method_string =~ /^_?(.+)=$/
       @hash[$1.to_sym] = args.first
+    elsif method_string =~ /^_(.*+)$/
+      @hash[$1.to_sym]
     elsif @hash[method.to_sym]
       @hash[method.to_sym]
     else
