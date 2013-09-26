@@ -2,6 +2,9 @@ require_dependency "meta_reports/application_controller"
 
 module MetaReports
   class ReportsController < ApplicationController
+    # remember to add authentication/authorization. E.g:
+      # before_filter :require_user
+      # load_and_authorize_resource
 
     def index
       @reports = Report.order("meta_reports_reports.title") || []
