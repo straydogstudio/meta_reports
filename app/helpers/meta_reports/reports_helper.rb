@@ -37,7 +37,7 @@ module MetaReports
       row_classes = opts[:row_classes] || {}
       row_colors = {}
       row_classes.each do |i, klass|
-        if color = MetaReports::Report.tr_color(klass, i)
+        if color = MetaReports::Report.color(klass, i)
           row_colors[i] = color
         end
       end
