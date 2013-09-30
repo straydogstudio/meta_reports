@@ -16,6 +16,15 @@ MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 - Default views for all formats, that expect a title, subtitle, description, and one or more tables of data.
 - Use css classes for easy styling
 
+##Philosophy
+
+MetaReports is avowedly fat model. It is also ActiveRecord based. This could change if a better way makes sense. 
+
+- **Fat model:** All reports are class methods in the MetaReports::Report class. This allows one to generate reports in various contexts without creating an instance (e.g. a mailer.) The reports themselves are meant to be pure data without formatting, except for class names, and html cell content if that is needed. 
+- **ActiveRecord:** Right now a database record is required in addition to the class method. So far this is for convenience in listing available reports and handling permissions. Someday, the code for a report might also be stored in a database, or an abstract description of a report with a web based query builder could be implemented. 
+- **Non ActiveRecord:** A non ActiveRecord implementation and install generator will be implemented. 
+- **That pesky formatting:** The class names / html content may broken out into helpers or a decorator pattern or something else in the future. 
+
 ##Usage
 
 ###Installation
@@ -47,7 +56,7 @@ Add authentication/authorization to the reports controller if desired.
 
 ###Writing a report
 
-- Write the data method using a static method in the `app/models/meta_reports/report.rb` model. The method should accept the params hash as its single argument. It should return the data in the form of a hash or a MetaReports::Data object. 
+- Write the data method using a static method in the `app/models/meta_reports/report.rb` model. The method should accept the params hash as its single argument. It should return the data in the form of a MetaReports::Data object or a hash. 
 - Create a new report record using the reports page. The name must match the data method name.
 - If not using the default templates, write your own templates.
 
@@ -56,10 +65,11 @@ Add authentication/authorization to the reports controller if desired.
 The key component of MetaReports is the metadata format. This allows you to write a data method once and export it to any supported format. If you follow convention, the default templates will work out of the box.
 
 - **Data:** A MetaReports::Data instance, which is a thinly wrapped hash. Returned by each report method. Methods:
-  - **title:** The report title
-  - **subtitle:** The report subtitle, displayed just below the title
-  - **description:** A description, usually displayed in paragraph form between the subtitle and tables of data
-  - **tables:** A hash, where each key is the table title and the value is the data for each table (can be nil)
+  - **title:** The report title.
+  - **subtitle:** The report subtitle, displayed just below the title.
+  - **description:** A description, usually displayed in paragraph form between the subtitle and tables of data.
+  - **tables:** A hash, where each key is the table title and the value is the data for each table (can be nil).
+  - **template:** Specify a template if you are not using the default template.
   - **page_orientation:** :landscape or :portrait. Used on PDF and XLSX formats. 
   - **page_margin:** The page margin in pixels (72/inch), in single number or four value array format (top, right, bottom, left.) Used on PDF and XLSX formats. Specify XLSX header/footer margins by specifying a 5th and 6th value respectively.
   - **page_size:** The page size. Used on the PDF format. See the [Prawn documentation](http://prawn.majesticseacreature.com/docs/0.11.1/Prawn/Document/PageGeometry.html).
@@ -97,6 +107,19 @@ Here is a simple example. See the [example class](spec/dummy/app/models/meta_rep
     end
   end
 ```
+
+###Colors
+
+There is currently an imperfect implementation of shared colors. You will define your colors by name in the MetaReports::Report class in the COLORS hash constant. If a table row contains a corresponding class name it will have that color in HTML, PDF, and XLSX format. Currently it is only applied in the PDF format. HTML is not far away. It is also intended to implement a means of specifying cell background and text color.
+
+```ruby
+COLORS = {
+  even:                   'efefef',
+  odd:                    'ffffff',
+}
+```
+
+For HTML, necessary styles will either be injected into the HTML output, or a rake task will be created that will generate an appropriate css file to be included in the layout. I have the latter solution working on a test site, but it is not ready for release.
 
 ##TODO
 
