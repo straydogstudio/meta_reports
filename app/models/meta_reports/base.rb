@@ -14,15 +14,23 @@ class MetaReports::Base < ActiveRecord::Base
 
   FORMATS = %w[html pdf xlsx]
 
-  def run(params)
-    report = ::MetaReports::Report.send(name, params)
-    report[:id] = "report_#{name}"
-    report[:report] = self
-    report
-  end
-
-  def view
-    connection.execute("UPDATE meta_reports_reports SET views = views + 1 WHERE id = #{id}")
+  def self.color(klass, row = 0)
+    color = COLORS[klass.to_sym]
+    return nil unless color
+    if color.is_a? Array
+      # the trailing split first is to drop any !important directive
+      # color = color[row%color.length].to_s.split.first 
+      # the trailing gsub is to drop any !important directive
+      color = color[row%color.length].to_s.gsub(/\s.*$/,'')
+    end
+    if color.gsub!(/^\$/, '') # we have a variable
+      color = COLORS[color.to_sym]
+      if color.is_a? Array
+        choice = color.gsub!(/Odd/,'') ? 1 : 0
+        color = color[choice]
+      end
+    end
+    color
   end
 
   def self.format_mask(format)
@@ -63,4 +71,20 @@ class MetaReports::Base < ActiveRecord::Base
     i = FORMATS.index(format.to_s)
     i ? (formats_mask[i] == 1) : nil
   end
+
+  def run(params)
+    report = ::MetaReports::Report.send(name, params)
+    report[:id] = "report_#{name}"
+    report[:report] = self
+    report
+  end
+
+  def view
+    connection.execute("UPDATE meta_reports_reports SET views = views + 1 WHERE id = #{id}")
+  end
+
+  COLORS = {
+    even:                   'efefef',
+    odd:                    'ffffff',
+  }
 end
