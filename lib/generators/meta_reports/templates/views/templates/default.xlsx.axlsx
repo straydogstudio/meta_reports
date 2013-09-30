@@ -7,7 +7,7 @@ styles[:bold] = wb.styles.add_style :style => :thick
 styles[:title] = wb.styles.add_style :sz => 14, :alignment => { :horizontal => :center}, :style => :thick
 styles[:subtitle] = wb.styles.add_style :sz => 12, :alignment => { :horizontal => :center}, :style => :thick
 
-wb.add_worksheet(name: @report[:title][0,31].gsub(/[:\/]/,'-'), page_margins: @report[:page_margins]) do |sheet|
+wb.add_worksheet(name: @report[:title][0,31].gsub(/[:\/]/,'-'), page_margins: convert_margins_to_xlsx(@report[:page_margin])) do |sheet|
 	first_table = @report[:tables].values.first
 	columns = first_table.blank? ? 12 : first_table.first.length
   last_column = to_xls_col(columns)

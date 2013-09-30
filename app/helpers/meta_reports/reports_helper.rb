@@ -1,5 +1,19 @@
 module MetaReports
   module ReportsHelper
+    def convert_margins_to_xlsx(margins)
+      margins = [*margins].compact.map {|val| val/72.0}
+      page_margins = {}
+      unless margins.blank?
+        len = margins.length
+        [:top, :right, :bottom, :left].each_with_index { |dir, i| page_margins[dir] = margins[i%len] }
+        if len == 6
+          page_margins[:header] = margins[5]
+          page_margins[:footer] = margins[6]
+        end
+      end
+      page_margins
+    end
+
     def html_cell(cell, tag = :td)
       if cell.is_a? Hash
         tags = cell.reject {|k,v| k == :content || k == :html}
@@ -12,54 +26,61 @@ module MetaReports
     end
 
     def prep_pdf_table(table, styling)
-      opts = table.last.is_a?(Hash) ? table.pop : {}
+      if table.is_a?(Array)
+        opts = table.last.is_a?(Hash) && table.pop || {}
+        data = table
+      else
+        data = table.to_a
+        opts = table.options
+      end
       styling[:column_widths] = opts[:column_widths] if opts[:column_widths]
       row_classes = opts[:row_classes] || {}
       row_colors = {}
       row_classes.each do |i, klass|
-        if color = Setting.tr_color(klass, i)
+        if color = MetaReports::Report.tr_color(klass, i)
           row_colors[i] = color
         end
       end
       styling[:row_colors] = row_colors
-      table.each_index do |i|
-        table[i].each_index do |j|
-          if table[i][j].is_a? Hash
-            [:html, :title, :id].each {|sym| table[i][j].delete(sym)}
-            _class = table[i][j].delete(:class)
+      data.each_index do |i|
+        data[i].each_index do |j|
+          if data[i][j].is_a? Hash
+            [:html, :title, :id].each {|sym| data[i][j].delete(sym)}
+            _class = data[i][j].delete(:class)
             [:right, :left, :center].each do |sym|
               set_style(styling, sym, i, j) if _class =~ /\b#{sym}\b|[^a-z]#{sym}/i
             end
             if _class =~ /\bbold\b|\bstrong\b/
               set_style(styling, :bold, i, j)
             end
-            unless table[i][j][:image]
-              table[i][j][:content] = table[i][j][:content].to_s unless table[i][j][:content].is_a? String
+            unless data[i][j][:image]
+              data[i][j][:content] = data[i][j][:content].to_s unless data[i][j][:content].is_a? String
             end
           end
         end
       end
-      table
+      data
     end
 
     def prep_xlsx_table(table, styling)
-      table.each_index do |i|
-        table[i].each_index do |j|
-          if table[i][j].nil?
-            table[i][j] = ''
-          elsif table[i][j].is_a? Hash
-            _class = table[i][j][:class]
+      data = table.to_a
+      data.each_index do |i|
+        data[i].each_index do |j|
+          if data[i][j].nil?
+            data[i][j] = ''
+          elsif data[i][j].is_a? Hash
+            _class = data[i][j][:class]
             [:right, :left, :center].each do |sym|
               set_style(styling, sym, i, j) if _class =~ /\b#{sym}\b|[^a-z]#{sym}/i
             end
             if _class =~ /\bbold\b|\bstrong\b/
               set_style(styling, :bold, i, j)
             end
-            table[i][j] = table[i][j][:content].to_s
+            data[i][j] = data[i][j][:content].to_s
           end
         end
       end
-      table
+      data
     end
 
     def report_link(report, title = report.title)

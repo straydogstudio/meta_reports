@@ -13,7 +13,7 @@ describe MetaReports::Table do
     table = MetaReports::Table.new
     table.foo = "moo"
     table.options[:foo].should == "moo"
-    table._bar = "boo"
+    table[:bar] = "boo"
     table.options[:bar].should == "boo"
   end
 
@@ -23,11 +23,11 @@ describe MetaReports::Table do
     table.foo.should == "bar"
   end
 
-  it 'returns nil or val for _ methods' do
+  it 'returns nil or val for [] methods' do
     table = MetaReports::Table.new
-    table._foo.should == nil
-    table._foo = "bar"
-    table._foo.should == "bar"
+    table[:foo].should == nil
+    table[:foo] = "bar"
+    table[:foo].should == "bar"
   end
 
   it 'adds to data array' do

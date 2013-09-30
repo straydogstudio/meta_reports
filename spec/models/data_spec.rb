@@ -13,7 +13,7 @@ describe MetaReports::Data do
     data = MetaReports::Data.new
     data.foo = "moo"
     data.to_h[:foo].should == "moo"
-    data._bar = "boo"
+    data[:bar] = "boo"
     data.to_h[:bar].should == "boo"
   end
 
@@ -23,17 +23,17 @@ describe MetaReports::Data do
     data.foo.should == "bar"
   end
 
-  it 'returns nil or val for _ methods' do
+  it 'returns nil or val for [] methods' do
     data = MetaReports::Data.new
-    data._foo.should == nil
-    data._foo = "bar"
-    data._foo.should == "bar"
+    data[:foo].should == nil
+    data[:foo] = "bar"
+    data[:foo].should == "bar"
   end
 
   it 'passes methods to hash if not a key' do
     data = MetaReports::Data.new
     data.foo = "bar"
-    data.to_a.should match_array([[:foo, 'bar']])
+    data.to_a.should match_array([[:foo, "bar"], [:tables, {}]])
   end
 
   it 'works with a block' do

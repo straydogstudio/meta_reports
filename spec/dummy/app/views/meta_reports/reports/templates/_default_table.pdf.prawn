@@ -3,8 +3,8 @@ if defined?(title)
 end
 styling = {}
 column_widths = {} if !defined?(column_widths) || column_widths.blank?
-font_size = table.last.is_a?(Hash) && table.last[:font_size] || 8
-table_header = @report[:table_header] != false
+font_size = table[:font_size] || 8
+table_header = table[:table_header] != false
 pdf.table prep_pdf_table(table, styling), :header => table_header, :row_colors => ["EEEEEE", "FFFFFF"], :width => pdf.bounds.width, :cell_style => {:padding => 2, :size => font_size, :align => :center} do |t|
   t.cells.borders = []
   t.style t.row(0), :borders => [:bottom], :background_color => "DDDDDD", :font_style => :bold
