@@ -55,33 +55,44 @@ Add authentication/authorization to the reports controller if desired.
 
 The key component of MetaReports is the metadata format. This allows you to write a data method once and export it to any supported format. If you follow convention, the default templates will work out of the box.
 
-- **Data:** A hash or MetaReports::Data instance. Returned by each report method.
+- **Data:** A MetaReports::Data instance, which is a thinly wrapped hash. Returned by each report method. Methods:
   - **title:** The report title
   - **subtitle:** The report subtitle, displayed just below the title
   - **description:** A description, usually displayed in paragraph form between the subtitle and tables of data
   - **tables:** A hash, where each key is the table title and the value is the data for each table (can be nil)
+  - **page_orientation:** :landscape or :portrait. Used on PDF and XLSX formats. 
+  - **page_margin:** The page margin in pixels (72/inch), in single number or four value array format (top, right, bottom, left.) Used on PDF and XLSX formats. Specify XLSX header/footer margins by specifying a 5th and 6th value respectively.
+  - **page_size:** The page size. Used on the PDF format. See the [Prawn documentation](http://prawn.majesticseacreature.com/docs/0.11.1/Prawn/Document/PageGeometry.html).
 
-- **Table:** A two dimensional array of cells or MetaReports::Table instance. 
+- **Table:** A MetaReports::Table instance, which is a thinly wrapped two dimensional array of cells.
+  - **options:** The options for the whole table. If you are using a plain array, this hash must be the last item in the table.
+    - **column_widths:** Column widths hash, used only on Prawn PDF output. 
+    - **font_size:** Font size for content. Used on PDF and XLSX output.
+    - **row_classes:** A hash with keys specifying row number (0 first), and values being a string of classes. 
+    - **table_header:** Defaults to true. First row in the table is a header row. Causes the row to be repeated on Prawn PDF tables if it breaks to another page.
+
+- **Cell:** A cell is either a single value, or a hash specifying options:
+  - **content:** The default content. 
+  - **html:** Special content for the HTML report. Used to provide links and other markup.
+  - **class:** The class for this content. Used to specify color, alignment, style. For HTML, classes are directly added to the td tags and you are expected to provide appropriate CSS.
+    - **left, center, right:** A class of left/center/right or ending with such values will align the content. It is expected you will provide the HTML styles.
+    - **bold, strong:** A class of bold or strong will make the content bold.
+  - **image:** Specify an image. Only used on PDF output.
 
 ###Examples
 
-
-
-## MetaData
-
-FilmRoll provides the following callbacks. Unless otherwise noted, all events are triggered on the surrounding container that FilmRoll is initialized with:
-
-
+Wouldn't that be nice?
 
 ##TODO
 
+- Common colors: This needs a common color mechanism, where all outputs that support color can have the same row / cell / text color. Any input on this is appreciated.
 - More formats (e.g. csv, json, text)
 - Direct to email / print (using IPP) / fax
 - Improved metadata conventions
 
 ##Changelog
 
-- **0.1.0:** (9/25/13) Initial release
+- **0.1.0:** (9/29/13) Initial release
 
 ##Development
 
