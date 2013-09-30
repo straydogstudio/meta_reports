@@ -81,7 +81,22 @@ The key component of MetaReports is the metadata format. This allows you to writ
 
 ###Examples
 
-Wouldn't that be nice?
+Here is a simple example. See the [example class](spec/dummy/app/models/meta_reports/report.rb) for more.
+
+```ruby
+  def self.moo(params)
+    MetaReports::Data.new do |d|
+      d.title = 'Le Moo'
+      d.subtitle = 'Ahem'
+      d.tables["The Big Moo"] = MetaReports::Table.new do |t|
+        t << ['Number', 'Title', 'Hey']
+        t << [1, 'Ode to Moo', 'Ow']
+        t << [2, 'Odious Moo', 'Eww']
+        t << [3, "#{params[:moo_type]} Moo", 'No Way!']
+      end
+    end
+  end
+```
 
 ##TODO
 
