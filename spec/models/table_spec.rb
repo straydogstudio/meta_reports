@@ -62,4 +62,17 @@ describe MetaReports::Table do
     end
     table.options[:foo].should == 'bar'
   end
+
+  it 'passes array functions to data' do
+    table = MetaReports::Table.new
+    table.push [:foo, "bar"]
+    table.to_a.should match_array([[:foo, 'bar']])
+    table.unshift [:baz, "moo"]
+    table.to_a.should match_array([[:baz, "moo"],[:foo, 'bar']])
+    table.first.should == [:baz, "moo"]
+    table.last.should == [:foo, 'bar']
+    table.shift.should == [:baz, "moo"]
+    table.pop.should == [:foo, 'bar']
+    table.to_a.should == []
+  end
 end

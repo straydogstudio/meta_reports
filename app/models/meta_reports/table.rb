@@ -5,10 +5,6 @@ class MetaReports::Table
     yield self if block_given?
   end
 
-  def length
-    @data.length
-  end
-
   def method_missing(method, *args, &block)
     method_string = method.to_s
     if method_string =~ /^(.+)=$/
@@ -19,6 +15,8 @@ class MetaReports::Table
       super
     end
   end
+
+  # options methods
 
   def [](key)
     @options[key]
@@ -36,20 +34,46 @@ class MetaReports::Table
     @options[:row_classes]
   end
 
-  def data
-    @data
-  end
-  
-  def to_a
-    @data
-  end
+  # data methods
 
-  def <<(row)
-    @data << row
+  def <<(val)
+    @data << val
   end
 
   def +(arr)
     @data += arr
+  end
+
+  def first
+    @data.first
+  end
+
+  def last
+    @data.last
+  end
+
+  def length
+    @data.length
+  end
+
+  def pop
+    @data.pop
+  end
+
+  def push(val)
+    @data.push(val)
+  end
+
+  def shift
+    @data.shift
+  end
+
+  def to_a
+    @data
+  end
+
+  def unshift(val)
+    @data.unshift(val)
   end
 
   alias_method :data, :to_a
