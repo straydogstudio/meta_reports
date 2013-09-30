@@ -1,10 +1,9 @@
 #MetaReports
 **A rails report engine**
 
-
 ##Description
 
-**MetaReports** is a [Rails](https://github.com/rails/rails) engine for reports. It's main goal is to provide a common metadata structure that can be exported in any desired format. If your report fits within the metadata convention you do not even need a template. However, it is very easy to create reports specific templates also.
+**MetaReports** is a [Rails](https://github.com/rails/rails) engine for reports. It provides a common metadata structure that can be exported in any desired format. If your report fits within the metadata convention you do not even need a template. However, it is very easy to create reports specific templates also.
 
 MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
@@ -23,7 +22,7 @@ MetaReports is avowedly fat model. It is also ActiveRecord based. This could cha
 - **Fat model:** All reports are class methods in the MetaReports::Report class. This allows one to generate reports in various contexts without creating an instance (e.g. a mailer.) The reports themselves are meant to be pure data without formatting, except for class names, and html cell content if that is needed. 
 - **ActiveRecord:** Right now a database record is required in addition to the class method. So far this is for convenience in listing available reports and handling permissions. Someday, the code for a report might also be stored in a database, or an abstract description of a report with a web based query builder could be implemented. 
 - **Non ActiveRecord:** A non ActiveRecord implementation and install generator will be implemented. 
-- **That pesky formatting:** The class names / html content may broken out into helpers or a decorator pattern or something else in the future. 
+- **That pesky formatting:** The class names / html content may broken out into helpers or a decorator pattern or something else in the future. It is difficult to think of a useful generic way to specify HTML content (e.g. an HTML link within a paragraph of text) outside of the report method itself. A reports controller already breaks strict REST ideology (where does a report belong that combines 5 models?) and unnecessary work for an ideology does not help create a useful tool.
 
 ##Usage
 
@@ -103,6 +102,7 @@ Here is a simple example. See the [example class](spec/dummy/app/models/meta_rep
         t << [1, 'Ode to Moo', 'Ow']
         t << [2, 'Odious Moo', 'Eww']
         t << [3, "#{params[:moo_type]} Moo", 'No Way!']
+        t << [3, 'Format', {content: "PDF/XLSX", html: "<span>HTML</span>", class: 'attention'}]
       end
     end
   end
@@ -116,10 +116,13 @@ There is currently an imperfect implementation of shared colors. You will define
 COLORS = {
   even:                   'efefef',
   odd:                    'ffffff',
+  attention:              'ff9999 !important',
 }
 ```
 
-For HTML, necessary styles will either be injected into the HTML output, or a rake task will be created that will generate an appropriate css file to be included in the layout. I have the latter solution working on a test site, but it is not ready for release.
+Note that you can specify `!important` and it will be reproduced in the HTML style.
+
+For HTML, necessary styles will either be injected into the HTML output, or a rake task will be created that will generate an appropriate css file to be included in the layout. I have the latter solution working in a test app, but it is not working as a generic rake task.
 
 ##TODO
 
