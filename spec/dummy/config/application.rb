@@ -1,14 +1,20 @@
 require File.expand_path('../boot', __FILE__)
 
-# Pick the frameworks you want:
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "active_resource/railtie"
-require "sprockets/railtie"
-# require "rails/test_unit/railtie"
+require 'rails/version'
+if Rails::VERSION::MAJOR < 4
+  # Pick the frameworks you want:
+  require "active_record/railtie"
+  require "action_controller/railtie"
+  require "action_mailer/railtie"
+  require "active_resource/railtie"
+  require "sprockets/railtie"
+  # require "rails/test_unit/railtie"
+else
+  require 'rails/all'
+end
 
-Bundler.require(*Rails.groups)
+# Bundler.require(*Rails.groups)
+Bundler.require
 require "meta_reports"
 
 module Dummy

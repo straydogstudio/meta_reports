@@ -21,11 +21,9 @@ ActiveRecord::Schema.define(:version => 20130801071213) do
     t.boolean  "direct"
     t.integer  "views"
     t.string   "target"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
     t.integer  "formats_mask"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
-
-  add_index "meta_reports_reports", ["name"], :name => "index_meta_reports_reports_on_name"
 
 end

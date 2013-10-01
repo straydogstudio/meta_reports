@@ -9,10 +9,10 @@ when '3.1', '3.2'
 when '4.0'
   gem 'rails'
   gem 'arel',  github: 'rails/arel'
-  gem 'activerecord-deprecated_finders', github: 'rails/activerecord-deprecated_finders'
-  gem 'protected_attributes', github: 'rails/protected_attributes'
+  gem 'activerecord-deprecated_finders'
+  gem 'protected_attributes'
 end
 
-# jquery-rails is used by the dummy application
 gem "jquery-rails"
 gem "thin"
+gem "genspec", git: 'git://github.com/straydogstudio/genspec.git'

@@ -80,7 +80,7 @@ class MetaReports::Base < ActiveRecord::Base
   end
 
   def view
-    connection.execute("UPDATE meta_reports_reports SET views = views + 1 WHERE id = #{id}")
+    ActiveRecord::Base.connection.execute("UPDATE meta_reports_reports SET views = views + 1 WHERE id = #{id}")
   end
 
   COLORS = {

@@ -3,7 +3,7 @@ MetaReports::Engine.routes.draw do
 
   get 'reports/file/:dir' => 'reports#file', as: 'file'
   resources :reports
-  match ':id(.:format)' => 'reports#show', as: 'short_show'
+  match ':id(.:format)' => 'reports#show', as: 'short_show', via: [:get, :post]
   get ':id/edit' => 'reports#edit', as: 'short_edit'
   get ':id/form' => 'reports#form', as: 'short_form'
 end

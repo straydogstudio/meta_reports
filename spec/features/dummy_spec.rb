@@ -34,7 +34,7 @@ describe 'MetaReports dummy app' do
     page.response_headers['Content-Type'].should == Mime::XLSX.to_s + "; charset=utf-8"
     File.open('/tmp/meta_reports.xlsx', 'w') {|f| f.write(page.source) }
     wb = nil
-    expect{ wb = Excelx.new('/tmp/meta_reports.xlsx') }.to_not raise_error
+    expect{ wb = Roo::Excelx.new('/tmp/meta_reports.xlsx') }.to_not raise_error
     wb.cell(3,1).should == 'Le Moo'
     wb.cell(6,1).should == 'The Big Moo'
     wb.cell(9,2).should == 'Odious Moo'
