@@ -139,7 +139,8 @@ For HTML, necessary styles will either be injected into the HTML output, or a ra
 
 ##Changelog
 
-- **0.1.0:** (9/29/13) Initial release
+- **0.0.2:** (9/29/13) Relax rails requirement, better testing
+- **0.0.1:** (9/29/13) Initial release
 
 ##Development
 
