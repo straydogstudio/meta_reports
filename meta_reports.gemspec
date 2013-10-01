@@ -33,4 +33,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rb-fsevent"
   s.add_development_dependency "genspec"
   s.add_development_dependency 'pdf-inspector', '~> 1.1.0'
+  s.add_development_dependency "coveralls"
 end

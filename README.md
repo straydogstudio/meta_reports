@@ -1,8 +1,10 @@
 #MetaReports &mdash; A rails report engine
 ===================================================
 
+[![Gem Version](https://badge.fury.io/rb/meta_reports.png)](http://badge.fury.io/rb/meta_reports)
 [![Build Status](https://secure.travis-ci.org/straydogstudio/meta_reports.png?branch=master)](http://travis-ci.org/straydogstudio/meta_reports)
 [![Dependency Status](https://gemnasium.com/straydogstudio/meta_reports.png?branch=master)](https://gemnasium.com/straydogstudio/meta_reports)
+[![Coverage Status](https://coveralls.io/repos/straydogstudio/meta_reports/badge.png)](https://coveralls.io/r/straydogstudio/meta_reports)
 
 ##Description
 
