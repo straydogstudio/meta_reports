@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
   s.test_files    = Dir["spec/**/*"] + ['Guardfile']
 
-  s.add_dependency "rails", "~> 3.2.14"
+  s.add_dependency "rails", ">= 3.2"
   s.add_dependency "axlsx_rails"
   s.add_dependency "prawn_rails"
 

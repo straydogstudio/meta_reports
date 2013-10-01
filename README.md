@@ -1,5 +1,8 @@
-#MetaReports
-**A rails report engine**
+#MetaReports &mdash; A rails report engine
+===================================================
+
+[![Build Status](https://secure.travis-ci.org/straydogstudio/meta_reports.png?branch=master)](http://travis-ci.org/straydogstudio/meta_reports)
+[![Dependency Status](https://gemnasium.com/straydogstudio/meta_reports.png?branch=master)](https://gemnasium.com/straydogstudio/meta_reports)
 
 ##Description
 
@@ -127,6 +130,7 @@ For HTML, necessary styles will either be injected into the HTML output, or a ra
 ##TODO
 
 - Common colors: This needs a common color mechanism, where all outputs that support color can have the same row / cell / text color. Any input on this is appreciated.
+- Charts based on table data
 - More formats (e.g. csv, json, text)
 - Direct to email / print (using IPP) / fax
 - Improved metadata conventions
