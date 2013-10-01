@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'fileutils'
 
-describe 'meta_reports:install', disabled: true do
+describe 'meta_reports:install', disabled: false do
   before :all do
     Dir.chdir(Rails.root) do
       FileUtils.cp "config/routes_empty.rb", "config/routes.rb"
