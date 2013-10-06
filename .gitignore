@@ -9,3 +9,7 @@ spec/dummy/.sass-cache
 Gemfile.lock
 Gemfile.lock.*
 tmp/rspec_guard_result
+
+coverage/.last_run.json
+
+coverage/.resultset.json
