@@ -8,7 +8,7 @@ report = @report if defined?(report).nil?
 	%>
 	<%= content_tag(:h3, title.html_safe) if title %>
 	<div>
-    <%= report_alt_links(report[:report], params) %>
+    <%= meta_report_alt_links(report[:report], params) %>
     <% if report[:description] %><br><p class='description'><%= report[:description] %></p><% end %>
   </div>
 

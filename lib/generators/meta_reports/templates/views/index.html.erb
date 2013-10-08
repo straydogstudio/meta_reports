@@ -23,7 +23,7 @@
     <td><%= report.direct %></td>
     <td><%= report.views %></td>
     <td><%= report.target %></td>
-    <td><%= report_link(report, 'Show') %></td>
+    <td><%= meta_report_link(report, 'Show') %></td>
     <td><%= link_to 'Edit', edit_report_path(report) %></td>
     <td><%= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
