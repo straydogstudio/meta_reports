@@ -14,25 +14,6 @@ class MetaReports::Base < ActiveRecord::Base
 
   FORMATS = %w[html pdf xlsx]
 
-  def self.color(klass, row = 0)
-    color = COLORS[klass.to_sym]
-    return nil unless color
-    if color.is_a? Array
-      # the trailing split first is to drop any !important directive
-      # color = color[row%color.length].to_s.split.first 
-      # the trailing gsub is to drop any !important directive
-      color = color[row%color.length].to_s.gsub(/\s.*$/,'')
-    end
-    if color.gsub!(/^\$/, '') # we have a variable
-      color = COLORS[color.to_sym]
-      if color.is_a? Array
-        choice = color.gsub!(/Odd/,'') ? 1 : 0
-        color = color[choice]
-      end
-    end
-    color
-  end
-
   def self.format_mask(format)
     1 << (FORMATS.index(format.to_s) || -1)
   end
