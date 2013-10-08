@@ -22,7 +22,9 @@ MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
 ##Philosophy
 
-MetaReports is avowedly fat model. It is also ActiveRecord based. This could change if a better way makes sense. 
+MetaReports is avowedly fat model. It is also ActiveRecord based. This could change if a better way makes sense.
+
+**NOTE:** There is a generator that [installs templates only](#install-templates-only). Then you can use the data structures and templates in whatever way you see fit, and write your own controllers / reports.
 
 - **Fat model:** All reports are class methods in the MetaReports::Report class. This allows one to generate reports in various contexts without creating an instance (e.g. a mailer.) The reports themselves are meant to be pure data without formatting, except for class names, and html cell content if that is needed. 
 - **ActiveRecord:** Right now a database record is required in addition to the class method. So far this is for convenience in listing available reports and handling permissions. Someday, the code for a report might also be stored in a database, or an abstract description of a report with a web based query builder could be implemented. 
@@ -41,9 +43,32 @@ gem 'meta_reports'
 
 Run the `bundle` command to install it.
 
-Now run the generator:
+There are two ways to use MetaReports:
 
-    rails generate meta_reports:install
+1. Install the templates, partials, helpers, and models only. No ActiveRecord is used.
+2. Install and mount the engine. In addition to the above, you will have a controller,
+additional templates for creating forms, and an ActiveRecord model.
+
+####Install templates only
+
+After installing the gem, run the generator:
+
+    rails generate meta_reports:install_templates
+
+This copies over the meta_reports migration, model, views, and controller: 
+
+- `app/models/meta_reports/base.rb`: The ActiveRecord base, should you need it
+- `app/models/meta_reports/data.rb`: The MetaReports::Data metadata model. Contains report data.
+- `app/models/meta_reports/table.rb`: The MetaReports::Table model for storing options and table data.
+- `app/models/meta_reports/report.rb`: The MetaReports::Report model for storing colors.
+- `app/helpers/meta_reports/reports_helper.rb`: MetaReports helper methods.
+- `app/views/meta_reports/reports/templates/*`: All templates.
+
+####Install the engine
+
+After installing the gem, run the generator:
+
+    rails generate meta_reports:install_engine
 
 This copies over the meta_reports migration, model, views, and controller: 
 
@@ -60,9 +85,13 @@ Add authentication/authorization to the reports controller if desired.
 
 ###Writing a report
 
-- Write the data method using a static method in the `app/models/meta_reports/report.rb` model. The method should accept the params hash as its single argument. It should return the data in the form of a MetaReports::Data object or a hash. 
-- Create a new report record using the reports page. The name must match the data method name.
-- If not using the default templates, write your own templates.
+- With templates installed:
+  - Use the models and helper methods to create report data. 
+  - Render it using the default templates, or any template of your own.
+- With the engine installed:
+  - Write the data method using a static method in the `app/models/meta_reports/report.rb` model. The method should accept the params hash as its single argument. It should return the data in the form of a MetaReports::Data object or a hash. 
+  - Create a new report record using the reports page. The name must match the data method name.
+  - If not using the default templates, write your own templates.
 
 ###MetaData
 
@@ -139,6 +168,7 @@ For HTML, necessary styles will either be injected into the HTML output, or a ra
 
 ##Changelog
 
+- **0.0.3:** (10/7/13) Template/model/helper generator
 - **0.0.2:** (9/29/13) Relax rails requirement, better testing
 - **0.0.1:** (9/29/13) Initial release
 
