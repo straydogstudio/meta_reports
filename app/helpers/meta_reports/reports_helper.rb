@@ -1,5 +1,24 @@
 module MetaReports
   module ReportsHelper
+    def meta_report_color(klass, row = 0)
+      color = MetaReports::Report::COLORS[klass.to_sym]
+      return nil unless color
+      if color.is_a? Array
+        # the trailing split first is to drop any !important directive
+        # color = color[row%color.length].to_s.split.first 
+        # the trailing gsub is to drop any !important directive
+        color = color[row%color.length].to_s.gsub(/\s.*$/,'')
+      end
+      if color.gsub!(/^\$/, '') # we have a variable
+        color = COLORS[color.to_sym]
+        if color.is_a? Array
+          choice = color.gsub!(/Odd/,'') ? 1 : 0
+          color = color[choice]
+        end
+      end
+      color
+    end
+
     def convert_margins_to_xlsx(margins)
       margins = [*margins].compact.map {|val| val/72.0}
       page_margins = {}
@@ -37,7 +56,7 @@ module MetaReports
       row_classes = opts[:row_classes] || {}
       row_colors = {}
       row_classes.each do |i, klass|
-        if color = MetaReports::Report.color(klass, i)
+        if color = meta_report_color(klass, i)
           row_colors[i] = color
         end
       end
@@ -53,9 +72,11 @@ module MetaReports
             if _class =~ /\bbold\b|\bstrong\b/
               set_style(styling, :bold, i, j)
             end
-            unless data[i][j][:image]
-              data[i][j][:content] = data[i][j][:content].to_s unless data[i][j][:content].is_a? String
+            unless data[i][j][:image] || data[i][j][:content].is_a?(String)
+              data[i][j][:content] = data[i][j][:content].to_s
             end
+          elsif !data[i][j].is_a?(String)
+            data[i][j] = data[i][j].to_s
           end
         end
       end
@@ -83,7 +104,8 @@ module MetaReports
       data
     end
 
-    def report_link(report, title = report.title)
+    def meta_report_link(report, title = report.title)
+      return nil unless report
       if report.direct
         content_tag :span do
           links = []
@@ -109,7 +131,8 @@ module MetaReports
       end
     end
 
-    def report_alt_links(report, params)
+    def meta_report_alt_links(report, params)
+      return nil unless report
       links = []
       if report.format? :pdf
         links << link_to(image_tag('meta_reports/print.png'), params.merge({:format => :pdf}), :target => '_blank')
