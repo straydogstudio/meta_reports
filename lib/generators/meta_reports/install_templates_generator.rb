@@ -9,7 +9,7 @@ module MetaReports
 
       def install_models
         directory "app/models/meta_reports", "app/models/meta_reports"
-        copy_file "lib/generators/meta_reports/templates/models/report.rb", "app/models/meta_reports/report.rb"
+        copy_file "lib/generators/meta_reports/templates/models/report_non_activerecord.rb", "app/models/meta_reports/report.rb"
       end
 
       def install_helper
@@ -17,7 +17,7 @@ module MetaReports
       end
 
       def install_views
-        directory "lib/generators/meta_reports/templates/views/templates", "app/views/meta_reports"
+        directory "lib/generators/meta_reports/templates/views/templates", "app/views/meta_reports/reports/templates"
       end
     end
   end
