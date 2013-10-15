@@ -13,6 +13,10 @@ module MetaReports
         end
       end
       
+      def install_controller
+        copy_file "controllers/reports_controller.rb", "app/controllers/meta_reports/reports_controller.rb"
+      end
+
       def install_model
         copy_file "models/report.rb", "app/models/meta_reports/report.rb"
       end
