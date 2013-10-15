@@ -1,4 +1,4 @@
-class CreateMetaReportsReports < ActiveRecord::Migration
+class ForTestingOnly < ActiveRecord::Migration
   def change
     create_table :meta_reports_reports do |t|
       t.string  :name
