@@ -163,7 +163,7 @@ COLORS = {
 
 When you run `rake meta_reports:export_colors` task it exports two SCSS files, one including HTML styles, the other including SCSS variables (for your use in other files.) The export uses the following conventions:
 
-- The corresponding SASS variable will be named the same as the key (with $ prepended of course). If the value is an array, the class name will have a numerical suffix for each entry.
+- The corresponding SASS variable will be named the same as the key (with $ prepended of course). If the value is an array, the variable names will be the class name plus a numerical suffix for each entry.
 - The corresponding CSS entry will use these conversions:
   - '___' will be converted to to a space
   - '__'  will be converted to a hash (id indicator)
