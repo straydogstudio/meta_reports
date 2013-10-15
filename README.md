@@ -22,13 +22,16 @@ MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
 ##Philosophy
 
-MetaReports is avowedly fat model. It is also ActiveRecord based. This could change if a better way makes sense.
+###Templates / data structures only
 
-**NOTE:** There is a generator that [installs templates only](#install-templates-only). Then you can use the data structures and templates in whatever way you see fit, and write your own controllers / reports.
+There is a generator that [installs templates only](#install-templates-only). Then you can use the data structures and templates in whatever way you see fit as you write your own controllers / reports. This method, in a sense, is adaptable to whatever your needs are.
+
+###Rails engine
+
+The MetaReports engine is avowedly fat model. It is also ActiveRecord based. This could change if a better way makes sense.
 
 - **Fat model:** All reports are class methods in the MetaReports::Report class. This allows one to generate reports in various contexts without creating an instance (e.g. a mailer.) The reports themselves are meant to be pure data without formatting, except for class names, and html cell content if that is needed. 
 - **ActiveRecord:** Right now a database record is required in addition to the class method. So far this is for convenience in listing available reports and handling permissions. Someday, the code for a report might also be stored in a database, or an abstract description of a report with a web based query builder could be implemented. 
-- **Non ActiveRecord:** A non ActiveRecord implementation and install generator will be implemented. 
 - **That pesky formatting:** The class names / html content may broken out into helpers or a decorator pattern or something else in the future. It is difficult to think of a useful generic way to specify HTML content (e.g. an HTML link within a paragraph of text) outside of the report method itself. A reports controller already breaks strict REST ideology (where does a report belong that combines 5 models?) and unnecessary work for an ideology does not help create a useful tool.
 
 ##Usage
@@ -60,7 +63,7 @@ This copies over the meta_reports migration, model, views, and controller:
 - `app/models/meta_reports/base.rb`: The ActiveRecord base, should you need it
 - `app/models/meta_reports/data.rb`: The MetaReports::Data metadata model. Contains report data.
 - `app/models/meta_reports/table.rb`: The MetaReports::Table model for storing options and table data.
-- `app/models/meta_reports/report.rb`: The MetaReports::Report model for storing colors.
+- `app/models/meta_reports/report.rb`: The MetaReports::Report model for storing colors and, if you wish, report methods.
 - `app/helpers/meta_reports/reports_helper.rb`: MetaReports helper methods.
 - `app/views/meta_reports/reports/templates/*`: All templates.
 
@@ -72,7 +75,7 @@ After installing the gem, run the generator:
 
 This copies over the meta_reports migration, model, views, and controller: 
 
-- `db/migrate/<number>_create_meta_reports_reports.rb`
+- `db/migrate/<timestamp>_create_meta_reports_reports.rb`
 - `app/models/meta_reports/report.rb`
 - `app/controllers/meta_reports/reports_controller.rb`
 - `app/views/meta_reports/reports/*`
@@ -144,19 +147,62 @@ Here is a simple example. See the [example class](spec/dummy/app/models/meta_rep
 
 ###Colors
 
-There is currently an imperfect implementation of shared colors. You will define your colors by name in the MetaReports::Report class in the COLORS hash constant. If a table row contains a corresponding class name it will have that color in HTML, PDF, and XLSX format. Currently it is only applied in the PDF format. HTML is not far away. It is also intended to implement a means of specifying cell background and text color.
+There is currently an imperfect implementation of shared colors. You will define your colors by name in the MetaReports::Report class in the COLORS hash constant. If a table row contains a corresponding class name it will have that color in HTML, PDF, and XLSX format. Currently it is only applied in the PDF and HTML formats. It is also intended to implement a means of specifying cell background and text color.
+
+An example COLORS hash is below:
 
 ```ruby
 COLORS = {
-  even:                   'efefef',
-  odd:                    'ffffff',
-  attention:              'ff9999 !important',
+  _even:                   'efefef',
+  _odd:                    'ffffff',
+  _yellow:                 ['ffffaa', 'ffffcc', 'f9f9a4', 'f9f9c6'],
+  tr____highlight:          '$_yellow_1 !important',
+  'a--hover' =>            ['ffcccc', 'ffc5c5']
 }
 ```
 
-Note that you can specify `!important` and it will be reproduced in the HTML style.
+When you run `rake meta_reports:export_colors` task it exports two SCSS files, one including HTML styles, the other including SCSS variables (for your use in other files.) The export uses the following conventions:
 
-For HTML, necessary styles will either be injected into the HTML output, or a rake task will be created that will generate an appropriate css file to be included in the layout. I have the latter solution working in a test app, but it is not working as a generic rake task.
+- The corresponding SASS variable will be named the same as the key (with $ prepended of course). If the value is an array, the class name will have a numerical suffix for each entry.
+- The corresponding CSS entry will use these conversions:
+  - '___' will be converted to to a space
+  - '__'  will be converted to a hash (id indicator)
+  - '_'   will be converted to a period (class indicator)
+  - '--'  (double dash) will be converted to to a colon (pseudo class)
+  - arrays of values will be converted into nth-child rules to color consecutive rows
+
+This means '____' will be converted to a space and period (' .'), '_____' to ' #', and 'a--first-child' will become 'a:first-child'.
+
+Given the above example, the generated `assets/stylesheets/lib/metareports_colors.scss` SASS file would be:
+
+```scss
+@import 'lib/metareports_color_variables.scss';
+.even { background: #efefef; }
+.odd { background: #ffffff; }
+.yellow:nth-child(4n+0) { background: #ffffaa; }
+.yellow:nth-child(4n+1) { background: #ffffcc; }
+.yellow:nth-child(4n+2) { background: #f9f9a4; }
+.yellow:nth-child(4n+3) { background: #f9f9c6; }
+tr .highlight { background: $_yellow_1 !important; }
+a:hover:nth-child(2n+0) { background: #ffcccc; }
+a:hover:nth-child(2n+1) { background: #ffc5c5; }
+```
+
+And the generated `lib/metareports_color_variables.scss` SASS file will be:
+
+```scss
+$_even: #efefef;
+$_odd: #ffffff;
+$_yellow_0: #ffffaa;
+$_yellow_1: #ffffcc;
+$_yellow_2: #f9f9a4;
+$_yellow_3: #f9f9c6;
+$tr____highlight: $_yellow_1;
+$a--hover_0: #ffcccc;
+$a--hover_1: #ffc5c5;
+```
+
+Note that you can specify `!important` and it will be reproduced in the CSS style.
 
 ##TODO
 
