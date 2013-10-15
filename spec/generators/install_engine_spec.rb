@@ -14,10 +14,18 @@ describe 'meta_reports:install_engine', disabled: false do
   after :all do
     Dir.chdir(Rails.root) do
       FileUtils.cp "config/routes_original.rb", "config/routes.rb"
-      migrations = Dir.glob("db/migrate/*create_meta_reports_reports.meta_reports.rb")
-      migrations.length.should == 1
-      migrations.each {|m| File.unlink(m) }
+      Dir.glob("db/migrate/*create_meta_reports_reports.meta_reports.rb").each {|m| File.unlink(m) }
     end
+  end
+
+  it "should create migration" do
+    Dir.chdir(Rails.root) do
+      Dir.glob("db/migrate/*create_meta_reports_reports.meta_reports.rb").length.should == 1
+    end
+  end
+
+  it "should generate controller" do
+    subject.should generate("app/controllers/meta_reports/reports_controller.rb")
   end
 
   it "should generate model" do
