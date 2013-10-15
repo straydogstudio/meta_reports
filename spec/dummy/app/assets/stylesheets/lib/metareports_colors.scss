@@ -1,0 +1,10 @@
+@import 'lib/metareports_color_variables.scss';
+.even { background: #efefef; }
+.odd { background: #ffffff; }
+.yellow:nth-child(4n+0) { background: #ffffaa; }
+.yellow:nth-child(4n+1) { background: #ffffcc; }
+.yellow:nth-child(4n+2) { background: #f9f9a4; }
+.yellow:nth-child(4n+3) { background: #f9f9c6; }
+tr .highlight { background: $_yellow_1; }
+a:hover:nth-child(2n+0) { background: #ffcccc; }
+a:hover:nth-child(2n+1) { background: #ffc5c5; }
