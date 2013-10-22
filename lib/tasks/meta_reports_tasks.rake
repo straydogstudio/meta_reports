@@ -9,8 +9,11 @@ def printfl(str)
 end
 
 namespace :meta_reports do
-  desc "dingo bingo ladooob!"
-  task :export_colors => :environment do
+  desc "export both color variables and the colors sass files"
+  task :export_colors => [:export_color_variables, :export_colors_only]
+
+  desc "export the colors file"
+  task :export_colors_only => :environment do
     FileUtils.mkdir_p "app/assets/stylesheets/lib"
     File.open("app/assets/stylesheets/lib/metareports_color_variables.scss", "w") do |f| 
       printfl "\tVariables: "
@@ -28,20 +31,25 @@ namespace :meta_reports do
       end
       puts " Done"
     end
+  end
 
+  desc "export the colors variable file"
+  task :export_color_variables => :environment do
     File.open("app/assets/stylesheets/lib/metareports_colors.scss", "w") do |f|
-      f.puts "@import 'lib/metareports_color_variables.scss';"
+      f.puts "@import 'metareports_color_variables.scss';"
       print "\tCSS classes: "
       MetaReports::Report::COLORS.each do |klass, color|
         printfl "."
-        klass = klass.to_s.gsub(/___/,' ').gsub(/__/,'#').gsub(/_/,'.').gsub(/--/,':')
+        css_klass = klass.to_s.gsub(/___/,' ').gsub(/__/,'#').gsub(/_/,'.').gsub(/--/,':')
         if color.is_a? Array
           len = color.length
           color.each_with_index do |val, i|
-            f.puts "#{klass}:nth-child(#{len}n+#{i}) { background: #{process_value(val)}; }"
+            f.puts "#{css_klass}:nth-child(#{len}n+#{i}) { background: $#{klass}_#{i}; }"
           end
+        elsif color.to_s =~ /^\s*\$/
+          f.puts "#{css_klass} { background: #{color}; }"
         else
-          f.puts "#{klass} { background: #{process_value(color)}; }"
+          f.puts "#{css_klass} { background: $#{klass}; }"
         end
       end
       puts " Done"
