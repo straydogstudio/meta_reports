@@ -1,5 +1,5 @@
 margin = @report[:page_margin] && [*@report[:page_margin]][0,4] || nil
-prawn_document(page_orientation: @report[:page_orientation] || :portrait, page_size: @report[:page_size] || 'LETTER', margin: margin) do |pdf|
+prawn_document(page_layout: @report[:page_orientation] || :portrait, page_size: @report[:page_size] || 'LETTER', margin: margin) do |pdf|
 
 render :partial => "meta_reports/reports/templates/default_header", :locals => { :pdf => pdf, :title => @report[:title], :subtitle => @report[:subtitle] }
 pdf.font_size = @report[:font_size] || 8
@@ -13,11 +13,13 @@ table_names = @report[:table_order] || @report[:tables].keys.sort_by {|k| k.to_s
 table_names.each do |table_name|
   table = @report[:tables][table_name]
   pdf.pad_bottom(25) do
-    # TODO: provide option to 'group' all or one table
-    # this forces a table to stay together on one page. throws an error if a table is larger than a page.
-  	# pdf.group do
+    if table[:group]
+      pdf.group do #if the table is larger than a page this will throw an error
+        render :partial => 'meta_reports/reports/templates/default_table', :locals => {:pdf => pdf, :title => table_name, :table => table}
+      end
+    else
   		render :partial => 'meta_reports/reports/templates/default_table', :locals => {:pdf => pdf, :title => table_name, :table => table}
-    # end
+    end
   end
 end
 

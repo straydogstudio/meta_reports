@@ -1,5 +1,5 @@
 margin = @report[:page_margin] && [*@report[:page_margin]][0,4] || nil
-prawn_document(page_orientation: @report[:page_orientation] || :portrait, page_size: @report[:page_size] || 'LETTER', margin: margin) do |pdf|
+prawn_document(page_layout: @report[:page_orientation] || :portrait, page_size: @report[:page_size] || 'LETTER', margin: margin) do |pdf|
 
 render :partial => "meta_reports/reports/templates/default_header", :locals => { :pdf => pdf, :title => @report[:title], :subtitle => @report[:subtitle] }
 pdf.font_size = @report[:font_size] || 8
