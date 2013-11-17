@@ -22,6 +22,16 @@ describe 'MetaReports dummy app' do
     page.should have_content "Ode to Moo"
   end
 
+  it "edits report" do
+    visit "/meta_reports/#{@report_moo.id}/edit"
+    page.should have_content "Moo, eh?"
+  end
+
+  it "shows new report form" do
+    visit "/meta_reports/new"
+    page.should have_content "New report"
+  end
+
   it "downloads report using pdf" do
     visit "/meta_reports/#{@report_moo.id}.pdf"
     response_headers["Content-Type"].should == "application/pdf; charset=utf-8"
