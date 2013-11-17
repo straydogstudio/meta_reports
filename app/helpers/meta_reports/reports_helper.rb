@@ -1,22 +1,22 @@
 module MetaReports
   module ReportsHelper
     def meta_report_color(klass, row = 0)
-      color = MetaReports::Report::COLORS[klass.to_sym]
-      return nil unless color
-      if color.is_a? Array
-        # the trailing split first is to drop any !important directive
-        # color = color[row%color.length].to_s.split.first 
-        # the trailing gsub is to drop any !important directive
-        color = color[row%color.length].to_s.gsub(/\s.*$/,'')
-      end
-      if color.gsub!(/^\$/, '') # we have a variable
-        color = COLORS[color.to_sym]
+      @meta_reports_colors ||= {}
+      @meta_reports_colors[klass.to_sym] ||= begin
+        Rails.logger.info "getting color"
+        color = MetaReports::Report::COLORS[klass.to_sym]
+        return nil unless color
         if color.is_a? Array
-          choice = color.gsub!(/Odd/,'') ? 1 : 0
-          color = color[choice]
+          # the trailing split first is to drop any !important directive
+          color = color[row%color.length].to_s.split.first 
         end
+        if color.gsub!(/^\$/, '') # we have a variable
+          index = 0
+          index = $1 if color.gsub!(/_(\d+)$/,'')
+          color = meta_report_color(color, index)
+        end
+        color
       end
-      color
     end
 
     def convert_margins_to_xlsx(margins)
@@ -37,6 +37,15 @@ module MetaReports
       if cell.is_a? Hash
         tags = cell.reject {|k,v| k == :content || k == :html}
         tags[:class] ||= 'textcenter'
+        if MetaReports::Base.inline_css
+          color = nil
+          tags[:class].split(/\s+/).each do |token|
+            if color = meta_report_color(token)
+              break
+            end
+          end
+          tags[:style] = "background-color: ##{color}"
+        end
         content_tag tag, (cell[:html] || cell[:content]).to_s.html_safe, tags
       elsif cell.is_a? Array
       else
@@ -66,11 +75,19 @@ module MetaReports
           if data[i][j].is_a? Hash
             [:html, :title, :id].each {|sym| data[i][j].delete(sym)}
             _class = data[i][j].delete(:class)
-            [:right, :left, :center].each do |sym|
-              set_style(styling, sym, i, j) if _class =~ /\b#{sym}\b|[^a-z]#{sym}/i
-            end
-            if _class =~ /\bbold\b|\bstrong\b/
-              set_style(styling, :bold, i, j)
+            unless _class.blank?
+              [:right, :left, :center].each do |sym|
+                set_style(styling, sym, i, j) if _class =~ /\b#{sym}\b|[^a-z]#{sym}/i
+              end
+              if _class =~ /\bbold\b|\bstrong\b/
+                set_style(styling, :bold, i, j)
+              end
+              _class.to_s.split(/\s+/).each do |token|
+                if color = meta_report_color(token)
+                  set_style(styling, :cell_bg_colors, i, j, color)
+                  break
+                end
+              end
             end
             unless data[i][j][:image] || data[i][j][:content].is_a?(String)
               data[i][j][:content] = data[i][j][:content].to_s
@@ -143,9 +160,9 @@ module MetaReports
       links.join(' ').html_safe
     end
 
-    def set_style(styling, style, row, col)
+    def set_style(styling, style, row, col, val = nil)
       styling[style] ||= []
-      styling[style] << [row,col]
+      styling[style] << (val ? [row,col,val] : [row,col])
     end
 
     def to_xls_col(column)

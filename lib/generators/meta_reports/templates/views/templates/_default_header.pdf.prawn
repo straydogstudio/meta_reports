@@ -7,7 +7,6 @@ pdf.text '(123) 456-7890', :size => 8
 
 pdf.move_up 35
 pdf.pad_bottom(10) do
-  logger.info "title: #{title.inspect}"
   pdf.text title, :size => 18, :align => :center if title
   pdf.text subtitle, :size => 12, :align => :center if subtitle
 end

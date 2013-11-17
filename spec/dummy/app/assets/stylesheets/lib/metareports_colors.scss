@@ -1,10 +1,8 @@
 @import 'metareports_color_variables.scss';
-.even { background: $_even; }
-.odd { background: $_odd; }
-.yellow:nth-child(4n+0) { background: $_yellow_0; }
-.yellow:nth-child(4n+1) { background: $_yellow_1; }
-.yellow:nth-child(4n+2) { background: $_yellow_2; }
-.yellow:nth-child(4n+3) { background: $_yellow_3; }
-tr .highlight { background: $_yellow_1 !important; }
-a:hover:nth-child(2n+0) { background: $a--hover_0; }
-a:hover:nth-child(2n+1) { background: $a--hover_1; }
+tr.even { background: $even; }
+tr.odd { background: $odd; }
+tr.yellow:nth-child(4n+0) { background: $yellow_0; }
+tr.yellow:nth-child(4n+1) { background: $yellow_1; }
+tr.yellow:nth-child(4n+2) { background: $yellow_2; }
+tr.yellow:nth-child(4n+3) { background: $yellow_3; }
+tr.highlight { background: $yellow_1 !important; }

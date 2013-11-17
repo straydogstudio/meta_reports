@@ -1,17 +1,11 @@
 wb = sheet.workbook
 styles = {} unless defined?(styles)
-unless styles[:bold]
-  styles[:bold] = wb.styles.add_style :b => true
-end
-unless styles[:title]
-	styles[:title] = wb.styles.add_style :sz => 14, :alignment => { :horizontal => :center}, :b => true
-end
-unless styles[:subtitle]
-	styles[:subtitle] = wb.styles.add_style :sz => 12, :alignment => { :horizontal => :center}, :b => true
-end	
+styles[:bold]     ||= wb.styles.add_style :b => true
+styles[:title]    ||= wb.styles.add_style :sz => 14, :alignment => { :horizontal => :center}, :b => true
+styles[:subtitle] ||= wb.styles.add_style :sz => 12, :alignment => { :horizontal => :center}, :b => true
+columns           ||= 8
+subtitle          ||= ''
 
-columns  = columns || 8
-subtitle = subtitle || ''
 sheet.add_row ["Company Name, Address"] + ['']*(columns-3) + [Date.today().to_s, Time.now().strftime("%I:%M")], :style => styles[:bold]
 sheet.add_row [' '] * columns
 sheet.add_row [title], :style => styles[:title]
