@@ -1,6 +1,9 @@
 class MetaReports::Base < ActiveRecord::Base
-  attr_accessible :description, :direct, :group, :name, :target, :title, :views, :formats_mask
+  attr_accessible :description, :direct, :group, :name, :target, :title, :views, :formats_mask, :formats
   validates_presence_of :name, :title, :group
+
+  cattr_accessor :inline_css
+  @@inline_css = true
   
   self.table_name = "meta_reports_reports"
 
@@ -68,4 +71,9 @@ class MetaReports::Base < ActiveRecord::Base
     even:                   'efefef',
     odd:                    'ffffff',
   }
+
+  # Sorry, God doesn't help self.helpers, which is why you need it
+  def self.helpers
+    ApplicationController.helpers
+  end
 end
