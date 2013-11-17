@@ -39,6 +39,22 @@
     <%= f.label :target %><br />
     <%= f.text_field :target %>
   </div>
+  <div class="field">
+    <% formats = @report.formats %>
+    <% if current_user.has_any_role?(:admin, :manager) %>
+      <% for format in MetaReports::Base::FORMATS.sort %>
+        <%= check_box_tag "report[formats][]", format, formats.include?(format) %>
+        <span class='bold'><%= format.humanize %></span>
+        <br />
+      <% end %>
+    <% else %>
+      <% for format in formats %>
+        * <span class='bold'><%= role.humanize %></span>
+        <br />
+      <% end %>
+    <% end %>
+    <%= hidden_field_tag "report[formats][]", "" %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>

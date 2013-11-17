@@ -39,6 +39,15 @@
     <%= f.label :target %><br />
     <%= f.text_field :target %>
   </div>
+  <div class="field">
+    <% formats = @report.formats %>
+    <% for format in MetaReports::Base::FORMATS.sort %>
+      <%= check_box_tag "report[formats][]", format, formats.include?(format) %>
+      <span class='bold'><%= format.humanize %></span>
+      <br />
+    <% end %>
+    <%= hidden_field_tag "report[formats][]", "" %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
