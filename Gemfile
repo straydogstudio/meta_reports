@@ -15,4 +15,3 @@ end
 
 gem "jquery-rails"
 gem "thin"
-gem "genspec", git: 'git://github.com/straydogstudio/genspec.git'
