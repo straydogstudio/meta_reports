@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.test_files    = Dir["spec/**/*"] + ['Guardfile']
 
   s.add_dependency "rails", ">= 3.2"
+  s.add_dependency "axlsx", ">= 2.0"
   s.add_dependency "axlsx_rails"
   s.add_dependency "prawn_rails"
 
