@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'fileutils'
+require 'genspec'
 
 describe 'meta_reports:install_templates', disabled: false do
   it "should generate views" do

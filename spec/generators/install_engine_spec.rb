@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'fileutils'
+require 'genspec'
 
 describe 'meta_reports:install_engine', disabled: false do
   before :all do
