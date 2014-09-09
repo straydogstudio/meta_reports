@@ -1,4 +1,5 @@
-require "meta_reports/engine"
+require 'axlsx_rails'
+require 'prawn_rails'
 
 module MetaReports
 end
