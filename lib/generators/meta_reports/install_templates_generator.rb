@@ -11,10 +11,6 @@ module MetaReports
         directory "app/models/meta_reports", "app/models/meta_reports"
       end
 
-      def install_helper
-        copy_file "app/helpers/meta_reports/reports_helper.rb", "app/helpers/meta_reports/reports_helper.rb"
-      end
-
       def install_views
         directory "app/views/meta_reports", "app/views/meta_reports"
       end

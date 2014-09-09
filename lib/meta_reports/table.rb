@@ -72,6 +72,10 @@ class MetaReports::Table
     @data
   end
 
+  def data=(value)
+    @data = value
+  end
+
   def unshift(val)
     @data.unshift(val)
   end

@@ -1,6 +1,7 @@
 class MetaReports::Data
   def initialize
     @hash = {tables: {}}
+    @id = rand(10000)
     yield self if block_given?
     self
   end
@@ -24,8 +25,16 @@ class MetaReports::Data
     @hash[key] = value
   end
 
+  def id
+    @hash[:id] || @hash[:title].to_s.downcase.gsub(/[^a-z]/,'_') || @id
+  end
+
   def tables
     @hash[:tables]
+  end
+
+  def tables=(value)
+    @hash[:tables] = value
   end
 
   def to_h
