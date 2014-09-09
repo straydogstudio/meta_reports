@@ -3,7 +3,6 @@ module MetaReports
     def meta_report_color(klass, row = 0)
       @meta_reports_colors ||= {}
       @meta_reports_colors[klass.to_sym] ||= begin
-        Rails.logger.info "getting color"
         color = MetaReports::Report::COLORS[klass.to_sym]
         return nil unless color
         if color.is_a? Array
