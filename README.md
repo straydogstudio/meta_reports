@@ -8,7 +8,7 @@
 
 ##Description
 
-**MetaReports** is a [Rails](https://github.com/rails/rails) engine for reports. It provides a common metadata structure that can be exported in any desired format. If your report fits within the metadata convention you do not even need a template. However, it is very easy to create reports specific templates also.
+**MetaReports** provides [Rails](https://github.com/rails/rails) classes and templates for reports. It provides a common metadata structure that can be exported in a desired format. If your report fits within the metadata convention you do not even need a template. It is, however, very easy to create specific templates.
 
 MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
@@ -16,26 +16,9 @@ MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
 ##Provides
 
-- An ActiveRecord and other data models, a controller, and some generic views. 
+- Data models for holding template data.
 - Default views for all formats, that expect a title, subtitle, description, and one or more tables of data.
-- Use css classes for easy styling
-
-##Philosophy
-
-###Templates / data structures only
-
-There is a generator that [installs templates only](#install-templates-only). Then you can use the data structures and templates in whatever way you see fit as you write your own controllers / reports.
-
-###Rails engine
-
-The MetaReports engine is avowedly fat model. It is also ActiveRecord based. This could change if a better way makes sense.
-
-- **Fat model:** All reports are class methods in the MetaReports::Report class. This allows one to generate reports in various contexts without creating an instance (e.g. a mailer.) The reports themselves are meant to be pure data without formatting, except for class names, and html cell content if that is needed. 
-- **ActiveRecord:** Right now a database record is required in addition to the class method. So far this is for convenience in listing available reports and handling permissions. Someday, the code for a report might also be stored in a database, or an abstract description of a report with a web based query builder could be implemented. 
-
-###Thoughts on REST
-
-The class names / html content may broken out into helpers or a decorator pattern or something else in the future. It is difficult to think of a useful generic way to specify HTML content (e.g. an HTML link within a paragraph of text) outside of the report method itself. A reports controller already breaks strict REST ideology (where does a report belong that combines 5 models?) and unnecessary work for an ideology does not help create a useful tool.
+- Provides a [common color mechanism](#colors) to style rows and cells
 
 ##Usage
 
@@ -49,55 +32,21 @@ gem 'meta_reports'
 
 Run the `bundle` command to install it.
 
-There are two ways to use MetaReports:
-
-1. Install the templates, partials, helpers, and models only. No ActiveRecord is used.
-2. Install and mount the engine. In addition to the above, you will have a controller,
-additional templates for creating forms, and an ActiveRecord model.
-
-####Install templates only
-
-After installing the gem, run the generator:
+If you wish to use the templates run the generator:
 
     rails generate meta_reports:install_templates
 
-This copies over the meta_reports migration, model, views, and controller: 
+This copies over the meta_reports color model and the templates:
 
-- `app/models/meta_reports/base.rb`: The ActiveRecord base, should you need it
-- `app/models/meta_reports/data.rb`: The MetaReports::Data metadata model. Contains report data.
-- `app/models/meta_reports/table.rb`: The MetaReports::Table model for storing options and table data.
-- `app/models/meta_reports/report.rb`: The MetaReports::Report model for storing colors and, if you wish, report methods.
-- `app/helpers/meta_reports/reports_helper.rb`: MetaReports helper methods.
-- `app/views/meta_reports/reports/templates/*`: All templates.
+- `app/models/meta_reports/color.rb`: The MetaReports::Color model for storing colors.
+- `app/views/meta_reports/*`: All templates.
 
-####Install the engine
-
-After installing the gem, run the generator:
-
-    rails generate meta_reports:install_engine
-
-This copies over the meta_reports migration, model, views, and controller: 
-
-- `db/migrate/<timestamp>_create_meta_reports_reports.rb`
-- `app/models/meta_reports/report.rb`
-- `app/controllers/meta_reports/reports_controller.rb`
-- `app/views/meta_reports/reports/*`
-
-Run the migration:
-
-    rake db:migrate
-
-Add authentication/authorization to the reports controller if desired.
+Now create a data structure using MetaReports::Data nd MetaReports::Table, and pass it off to the default templates.
 
 ###Writing a report
 
-- With templates installed:
-  - Use the models and helper methods to create report data. 
-  - Render it using the default templates, or any template of your own.
-- With the engine installed:
-  - Write the data method using a static method in the `app/models/meta_reports/report.rb` model. The method should accept the params hash as its single argument. It should return the data in the form of a MetaReports::Data object or a hash. 
-  - Create a new report record using the reports page. The name must match the data method name.
-  - If not using the default templates, write your own templates.
+- Use the models and helper methods to create report data. 
+- Render it using the default templates, or any template of your own.
 
 ###MetaData
 
@@ -112,6 +61,8 @@ The key component of MetaReports is the metadata format. This allows you to writ
   - **page_orientation:** :landscape or :portrait. Used on PDF and XLSX formats. 
   - **page_margin:** The page margin in pixels (72/inch), in single number or four value array format (top, right, bottom, left.) Used on PDF and XLSX formats. Specify XLSX header/footer margins by specifying a 5th and 6th value respectively.
   - **page_size:** The page size. Used on the PDF format. See the [Prawn documentation](http://prawn.majesticseacreature.com/docs/0.11.1/Prawn/Document/PageGeometry.html).
+  - **tables_blank:** What to display if the report has no tables. Defaults to 'No data found'.
+  - **conclusion:** Text to display below all tables.
 
 - **Table:** A MetaReports::Table instance, which is a thinly wrapped two dimensional array of cells.
   - **options:** The options for the whole table. If you are using a plain array, this hash must be the last item in the table.
@@ -151,11 +102,11 @@ Here is a simple example. See the [example class](spec/dummy/app/models/meta_rep
 
 ###Colors
 
-There is currently an incomplete implementation of shared colors. You will define your colors by name in the MetaReports::Report class in the COLORS hash constant. If a table row or cell contains a corresponding class name it will have that color in HTML and PDF. XLSX support is planned. It is also intended to implement a means of specifying cell text color.
+There is currently an incomplete implementation of shared colors. Define your colors by name in the MetaReports::Color class in the COLORS hash constant. If a table row or cell contains a corresponding class name it will have that color in HTML and PDF. XLSX support is planned. It is also intended to implement a means of specifying cell text color.
 
 #### Declaring Colors
 
-Specify colors using the COLORS hash constnat in your MetaReports::Report class. An example COLORS hash is below:
+Specify colors using the COLORS hash constant in your MetaReports::Report class. An example COLORS hash is below:
 
 ```ruby
 COLORS = {
@@ -185,10 +136,16 @@ Note the row number begins with zero, and excludes the header if enabled.
 
 #### Inline CSS
 
-MetaReports defaults to inline styling for HTML. If you wish to turn this off (and use either your own styles or the export below) set the following:
+MetaReports defaults to inline styling for HTML. You can use the rake task to create a CSS stylesheet with corresponding colors and class names. Each table must have inline_css set to false for this to occur: 
 
 ```ruby
-MetaReports::Base.inline_css = false
+MetaReports::Data.new do |d|
+  d.title = 'Class based row/cell background colors'
+  d.tables["Table 1"] = MetaReports::Table.new do |t|
+    t << %w{One simple row}
+    t.inline_css = false
+  end
+end
 ```
 
 #### Export SCSS / CSS
@@ -236,14 +193,15 @@ To export only the colors file, use the `meta_reports:export_colors_only` Rake t
 
 ##TODO
 
+- Inline HTML styles
 - Expand common colors to spreadsheets, and enable coloring of text / individual cells
 - Charts based on table data
 - More formats (e.g. csv, json, text)
-- Direct to email / print (using IPP) / fax
 - Improved metadata conventions
 
 ##Changelog
 
+- **0.0.6:** (09/08/14) Drop engine. Just models / templates.
 - **0.0.5:** (11/16/13) Simplify color handling, color individual cells
 - **0.0.4:** (10/7/13) Colors rake task
 - **0.0.3:** (10/7/13) Template/model/helper generator
@@ -253,8 +211,6 @@ To export only the colors file, use the `meta_reports:export_colors_only` Rake t
 ##Development
 
 Fork the project on [github](https://github.com/straydogstudio/meta_reports 'straydogstudio / MetaReports on Github'), edit away, and pull.
-
-### Rspec, and generator testing
 
 ##Authors, License and Stuff
 
