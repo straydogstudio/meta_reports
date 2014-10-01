@@ -23,7 +23,6 @@ describe 'rake tasks' do
 
     it "exports colors" do
       Dir.chdir(Rails.root) do
-        puts Dir.pwd
         css = File.open("app/assets/stylesheets/lib/metareports_colors.scss",'rb') {|f| f.read }
         css.should == "@import 'metareports_color_variables.scss';
 tr.even { background: $even; }
