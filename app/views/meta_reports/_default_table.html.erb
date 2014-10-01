@@ -6,12 +6,12 @@ table_class = table.options[:table_class].to_s if !defined?(table_class) || tabl
 <div class='list_container'>
 <%= content_tag(:table, :class => "table table-condensed #{table_class}") do %>
   <% unless @report[:table_header] == false %>
-    <%= content_tag(:thead, content_tag(:tr, table.to_a.shift.map { |h| html_cell(h, :th)}.join.html_safe ) ) %>
+    <%= content_tag(:thead, content_tag(:tr, table.to_a.shift.map { |h| html_cell(h, tag: :th, inline_css: table.options[:inline_css])}.join.html_safe ) ) %>
   <% end %>
   <tbody>
     <% table.to_a.each_with_index do |row, i|
       style = nil
-      if MetaReports::Base.inline_css && row_classes[i]
+      if table[:inline_css] && row_classes[i]
         color = nil
         row_classes[i].split(/\s+/).each do |token|
           if color = meta_report_color(token)
@@ -24,7 +24,7 @@ table_class = table.options[:table_class].to_s if !defined?(table_class) || tabl
       %>
       <%= content_tag(:tr, class: row_classes[i], style: style) do
         row.each do |cell|
-          %><%= html_cell(cell) %><%
+          %><%= html_cell(cell, inline_css: table.options[:inline_css]) %><%
         end
       end %>
     <% end %>

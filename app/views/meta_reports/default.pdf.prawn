@@ -9,7 +9,7 @@ prawn_document(page_layout: @report[:page_orientation] || :portrait, page_size: 
       pdf.start_new_page layout: report[:page_orientation] || :portrait, size: report[:page_size] || 'LETTER', margin: margin 
     end
 
-    render :partial => "meta_reports/reports/templates/default_header", :locals => { :pdf => pdf, :title => report[:title], :subtitle => report[:subtitle] }
+    render :partial => "meta_reports/default_header", :locals => { :pdf => pdf, :title => report[:title], :subtitle => report[:subtitle] }
     pdf.font_size = report[:font_size] || 8
     if report[:description]
       pdf.move_up 5
@@ -23,15 +23,15 @@ prawn_document(page_layout: @report[:page_orientation] || :portrait, page_size: 
       pdf.pad_bottom(25) do
         if table[:group]
           pdf.group do #if the table is larger than a page this will throw an error
-            render :partial => 'meta_reports/reports/templates/default_table', :locals => {:pdf => pdf, :title => table_name, :table => table}
+            render :partial => 'meta_reports/default_table', :locals => {:pdf => pdf, :title => table_name, :table => table}
           end
         else
-          render :partial => 'meta_reports/reports/templates/default_table', :locals => {:pdf => pdf, :title => table_name, :table => table}
+          render :partial => 'meta_reports/default_table', :locals => {:pdf => pdf, :title => table_name, :table => table}
         end
       end
     end
 
-    render partial: "meta_reports/reports/templates/default_footer", locals: { pdf: pdf }
+    render partial: "meta_reports/default_footer", locals: { pdf: pdf }
 
   end #each report
 end #prawn document
