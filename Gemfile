@@ -15,3 +15,4 @@ end
 
 gem "jquery-rails"
 gem "thin"
+gem "prawn-table"

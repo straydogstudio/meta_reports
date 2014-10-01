@@ -20,6 +20,8 @@ MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 - Default views for all formats, that expect a title, subtitle, description, and one or more tables of data.
 - Provides a [common color mechanism](#colors) to style rows and cells
 
+*Note:* Before 0.1.0 MetaReports provided an engine that served reports. The engine has been dropped. Look at the rspec/dummy app for one approach to serving reports.
+
 ##Usage
 
 ###Installation
@@ -28,6 +30,7 @@ Add meta_reports your Gemfile:
 
 ```ruby
 gem 'meta_reports'
+gem 'prawn-table' # if you are using the latest prawn, table is not included
 ```
 
 Run the `bundle` command to install it.
