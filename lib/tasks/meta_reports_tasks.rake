@@ -17,7 +17,7 @@ namespace :meta_reports do
     FileUtils.mkdir_p "app/assets/stylesheets/lib"
     File.open("app/assets/stylesheets/lib/metareports_color_variables.scss", "w") do |f| 
       printfl "\tVariables: "
-      MetaReports::Report::COLORS.each do |klass, value|
+      MetaReports::Color::COLORS.each do |klass, value|
         printfl "."
         klass = klass.to_s
         if value.is_a? Array
@@ -38,7 +38,7 @@ namespace :meta_reports do
     File.open("app/assets/stylesheets/lib/metareports_colors.scss", "w") do |f|
       f.puts "@import 'metareports_color_variables.scss';"
       print "\tCSS classes: "
-      MetaReports::Report::COLORS.each do |klass, color|
+      MetaReports::Color::COLORS.each do |klass, color|
         printfl "."
         #for now, colors are simply row colors
         #css_klass = klass.to_s.gsub(/___/,' ').gsub(/__/,'#').gsub(/_/,'.').gsub(/--/,':')
