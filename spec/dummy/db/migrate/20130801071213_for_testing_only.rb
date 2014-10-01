@@ -1,6 +1,6 @@
 class ForTestingOnly < ActiveRecord::Migration
   def change
-    create_table :meta_reports_reports do |t|
+    create_table :reports do |t|
       t.string  :name
       t.text    :description
       t.string  :title
@@ -12,6 +12,5 @@ class ForTestingOnly < ActiveRecord::Migration
 
       t.timestamps
     end
-    # add_index :meta_reports_reports, :name
   end
 end

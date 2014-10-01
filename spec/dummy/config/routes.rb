@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
-  mount MetaReports::Engine => "/meta_reports"
+  resources :reports
+
   root to: "home#index"
 end
