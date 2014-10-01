@@ -32,11 +32,13 @@ module MetaReports
       page_margins
     end
 
-    def html_cell(cell, tag = :td)
+    def html_cell(cell, options = {})
+      tag = options[:tag] || :td
+      options[:inline_css].nil? && options[:inline_css] = true
       if cell.is_a? Hash
         tags = cell.reject {|k,v| k == :content || k == :html}
-        tags[:class] ||= 'textcenter'
-        if MetaReports::Base.inline_css
+        tags[:class] ||= options[:default_class]
+        if options[:inline_css]
           color = nil
           tags[:class].split(/\s+/).each do |token|
             if color = meta_report_color(token)
@@ -48,7 +50,7 @@ module MetaReports
         content_tag tag, (cell[:html] || cell[:content]).to_s.html_safe, tags
       elsif cell.is_a? Array
       else
-        content_tag tag, cell, :class => 'textcenter'
+        content_tag(tag, cell, :class => options[:default_class])
       end
     end
 
@@ -142,7 +144,7 @@ module MetaReports
         end
       else
         content_tag :span do
-         link_to title, meta_reports.short_form_path(report)
+         link_to title, report
         end
       end
     end
