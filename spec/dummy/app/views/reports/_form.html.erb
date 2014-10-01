@@ -41,7 +41,7 @@
   </div>
   <div class="field">
     <% formats = @report.formats %>
-    <% for format in MetaReports::Base::FORMATS.sort %>
+    <% for format in Report::FORMATS.sort %>
       <%= check_box_tag "report[formats][]", format, formats.include?(format) %>
       <span class='bold'><%= format.humanize %></span>
       <br />
