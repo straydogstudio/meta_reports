@@ -8,7 +8,7 @@
 
 ##Description
 
-**MetaReports** provides [Rails](https://github.com/rails/rails) classes and templates for reports. It provides a common metadata structure that can be exported in a desired format. If your report fits within the metadata convention you do not even need a template. It is, however, very easy to create specific templates.
+**MetaReports** provides [Rails](https://github.com/rails/rails) classes and templates for reports. It provides a common metadata structure that can be passed to the desired template format. If your report does not fit within the metadata convention it is very easy to create specific templates.
 
 MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
@@ -32,16 +32,16 @@ gem 'meta_reports'
 
 Run the `bundle` command to install it.
 
-If you wish to use the templates run the generator:
+Install the templates:
 
-    rails generate meta_reports:install_templates
+    bundle exec rails generate meta_reports:install_templates
 
 This copies over the meta_reports color model and the templates:
 
 - `app/models/meta_reports/color.rb`: The MetaReports::Color model for storing colors.
 - `app/views/meta_reports/*`: All templates.
 
-Now create a data structure using MetaReports::Data nd MetaReports::Table, and pass it off to the default templates.
+Now create a data structure using MetaReports::Data and MetaReports::Table, and pass it off to the default templates.
 
 ###Writing a report
 
@@ -193,7 +193,6 @@ To export only the colors file, use the `meta_reports:export_colors_only` Rake t
 
 ##TODO
 
-- Inline HTML styles
 - Expand common colors to spreadsheets, and enable coloring of text / individual cells
 - Charts based on table data
 - More formats (e.g. csv, json, text)
@@ -201,7 +200,7 @@ To export only the colors file, use the `meta_reports:export_colors_only` Rake t
 
 ##Changelog
 
-- **0.0.6:** (09/08/14) Drop engine. Just models / templates.
+- **0.1.0:** (09/08/14) Drop engine. Just models / templates. Breaking change if you were using the engine.
 - **0.0.5:** (11/16/13) Simplify color handling, color individual cells
 - **0.0.4:** (10/7/13) Colors rake task
 - **0.0.3:** (10/7/13) Template/model/helper generator
