@@ -15,3 +15,6 @@ coverage/.last_run.json
 coverage/.resultset.json
 
 *.scssc
+
+spec/dummy/db/schema.rb
+spec/dummy/app/views/meta_reports/*
