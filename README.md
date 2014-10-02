@@ -203,7 +203,8 @@ To export only the colors file, use the `meta_reports:export_colors_only` Rake t
 
 ##Changelog
 
-- **0.1.0:** (09/08/14) Drop engine. Just models / templates. Breaking change if you were using the engine.
+- **0.1.1:** (10/02/14) Fix class loading problem
+- **0.1.0:** (10/01/14) Drop engine. Just models / templates. Breaking change if you were using the engine.
 - **0.0.5:** (11/16/13) Simplify color handling, color individual cells
 - **0.0.4:** (10/7/13) Colors rake task
 - **0.0.3:** (10/7/13) Template/model/helper generator
