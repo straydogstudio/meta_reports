@@ -109,7 +109,7 @@ There is currently an incomplete implementation of shared colors. Define your co
 
 #### Declaring Colors
 
-Specify colors using the COLORS hash constant in your MetaReports::Report class. An example COLORS hash is below:
+Specify colors using the COLORS hash constant in your MetaReports::Color class. An example COLORS hash is below:
 
 ```ruby
 COLORS = {

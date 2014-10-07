@@ -3,7 +3,7 @@ module MetaReports
     def meta_report_color(klass, row = 0)
       @meta_reports_colors ||= {}
       @meta_reports_colors[klass.to_sym] ||= begin
-        color = MetaReports::Report::COLORS[klass.to_sym]
+        color = MetaReports::Color::COLORS[klass.to_sym]
         return nil unless color
         if color.is_a? Array
           # the trailing split first is to drop any !important directive
