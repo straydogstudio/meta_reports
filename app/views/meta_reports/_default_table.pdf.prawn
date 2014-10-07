@@ -17,7 +17,7 @@ pdf.table prep_pdf_table(table, styling), :header => table_header, :row_colors =
   styling[:bold].to_a.each do |cell|
     t.style t.row(cell[0]).column(cell[1]), :font_style => :bold
   end
-  styling[:row_colors].each do |row, color|
+  styling[:row_colors].to_a.each do |row, color|
     t.style t.row(row+row_offset), :background_color => color
   end
   styling[:cell_bg_colors].to_a.each do |cell|
