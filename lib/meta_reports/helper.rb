@@ -74,7 +74,7 @@ module MetaReports
       data.each_index do |i|
         data[i].each_index do |j|
           if data[i][j].is_a? Hash
-            [:html, :title, :id].each {|sym| data[i][j].delete(sym)}
+            [:html, :title, :id, :link].each {|sym| data[i][j].delete(sym)}
             _class = data[i][j].delete(:class)
             unless _class.blank?
               [:right, :left, :center].each do |sym|
