@@ -1,5 +1,7 @@
 module MetaReports
   class Table
+    delegate :each, :each_with_index, to: :@data
+    
     def initialize
       @data = []
       @options = {row_classes: {}}
