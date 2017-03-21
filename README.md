@@ -1,4 +1,4 @@
-#MetaReports &mdash; A rails report engine
+# MetaReports &mdash; A rails report engine
 ===================================================
 
 [![Gem Version](https://badge.fury.io/rb/meta_reports.png)](http://badge.fury.io/rb/meta_reports)
@@ -6,7 +6,7 @@
 [![Dependency Status](https://gemnasium.com/straydogstudio/meta_reports.png?branch=master)](https://gemnasium.com/straydogstudio/meta_reports)
 [![Coverage Status](https://coveralls.io/repos/straydogstudio/meta_reports/badge.png)](https://coveralls.io/r/straydogstudio/meta_reports)
 
-##Description
+## Description
 
 **MetaReports** provides [Rails](https://github.com/rails/rails) classes and templates for reports. It provides a common metadata structure that can be passed to the desired template format. If your report does not fit within the metadata convention it is very easy to create specific templates.
 
@@ -14,7 +14,7 @@ MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
 ---
 
-##Provides
+## Provides
 
 - Data models for holding template data.
 - Default views for all formats, that expect a title, subtitle, description, and one or more tables of data.
@@ -22,9 +22,9 @@ MetaReports exports to HTML, PDF, and XLSX formats. [More are to come](#todo).
 
 *Note:* Before 0.1.0 MetaReports provided an engine that served reports. The engine has been dropped. Look at the rspec/dummy app for one approach to serving reports.
 
-##Usage
+## Usage
 
-###Installation
+### Installation
 
 Add meta_reports your Gemfile:
 
@@ -46,12 +46,12 @@ This copies over the meta_reports color model and the templates:
 
 Now create a data structure using MetaReports::Data and MetaReports::Table, and pass it off to the default templates.
 
-###Writing a report
+### Writing a report
 
 - Use the models and helper methods to create report data. 
 - Render it using the default templates, or any template of your own.
 
-###MetaData
+### MetaData
 
 The key component of MetaReports is the metadata format. This allows you to write a data method once and export it to any supported format. If you follow convention, the default templates will work out of the box.
 
@@ -83,7 +83,7 @@ The key component of MetaReports is the metadata format. This allows you to writ
     - **bold, strong:** A class of bold or strong will make the content bold.
   - **image:** Specify an image. Only used on PDF output.
 
-###Examples
+### Examples
 
 Here is a simple example. See the [example class](spec/dummy/app/models/meta_reports/report.rb) for more.
 
@@ -103,7 +103,7 @@ Here is a simple example. See the [example class](spec/dummy/app/models/meta_rep
   end
 ```
 
-###Colors
+### Colors
 
 There is currently an incomplete implementation of shared colors. Define your colors by name in the MetaReports::Color class in the COLORS hash constant. If a table row or cell contains a corresponding class name it will have that color in HTML and PDF. XLSX support is planned. It is also intended to implement a means of specifying cell text color.
 
@@ -194,14 +194,14 @@ Note that you can specify `!important` and it will be reproduced in the CSS styl
 To export only the variables file, use the `meta_reports:export_color_variables` Rake task. 
 To export only the colors file, use the `meta_reports:export_colors_only` Rake task. 
 
-##TODO
+## TODO
 
 - Expand common colors to spreadsheets, and enable coloring of text / individual cells
 - Charts based on table data
 - More formats (e.g. csv, json, text)
 - Improved metadata conventions
 
-##Changelog
+## Changelog
 
 - **0.1.2:** (10/02/14) Handle empty row_class option
 - **0.1.1:** (10/02/14) Fix class loading problem
@@ -212,7 +212,7 @@ To export only the colors file, use the `meta_reports:export_colors_only` Rake t
 - **0.0.2:** (9/29/13) Relax rails requirement, better testing
 - **0.0.1:** (9/29/13) Initial release
 
-##Development
+## Development
 
 Fork the project on [github](https://github.com/straydogstudio/meta_reports 'straydogstudio / MetaReports on Github'), edit away, and pull.
 
