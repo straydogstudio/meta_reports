@@ -1,4 +1,4 @@
-require 'axlsx_rails'
+require 'caxlsx_rails'
 require 'prawn_rails'
 require 'meta_reports/data'
 require 'meta_reports/table'

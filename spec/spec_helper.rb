@@ -8,7 +8,7 @@ require 'bundler/setup'
 require 'rspec/rails'
 require 'rspec/autorun'
 require 'capybara/rspec'
-require 'axlsx_rails'
+require 'caxlsx_rails'
 require "pdf/inspector"
 require 'roo'
 
