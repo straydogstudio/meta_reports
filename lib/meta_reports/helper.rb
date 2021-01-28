@@ -40,7 +40,7 @@ module MetaReports
         tags[:class] ||= options[:default_class]
         if options[:inline_css]
           color = nil
-          tags[:class].split(/\s+/).each do |token|
+          tags[:class].to_s.split(/\s+/).each do |token|
             if color = meta_report_color(token)
               break
             end
